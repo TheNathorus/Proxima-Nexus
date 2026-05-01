@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en" data-deck-lang="__DECK_LANG__">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="slides-format" content="viewport">
+    <title>Proxima OS — Executive Team in a Box</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-bg: #03070f;
+            --color-bg-deep: #010408;
+            --color-surface: #0d1526;
+            --color-text: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-text-muted: #64748b;
+            --color-accent-1: #8B5CF6;
+            --color-accent-2: #22D3EE;
+            --color-accent-3: #F59E0B;
+            --color-glass-bg: rgba(255,255,255,0.05);
+            --color-glass-border: rgba(255,255,255,0.08);
+            --color-vignette: rgba(0,0,0,0.55);
+            --font-display: 'Instrument Serif', Georgia, serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+        }
+    </style>
+    <style>
+        :root { --color-bg: #03070f; --color-text: #f1f5f9; --glow-color-rgb: 139,92,246; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { background: var(--color-bg); margin: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+        .deck { width: 100vw; height: 100vh; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: none; pointer-events: none; overflow: hidden; }
+        .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 3.5vw, 3.5rem); }
+        .nav-controls { position: fixed; bottom: 4px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; z-index: 100; background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); padding: 8px 20px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.08); }
+        .nav-btn { width: 36px; height: 36px; border: none; background: rgba(139,92,246,0.15); color: #8B5CF6; border-radius: 50%; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .nav-btn:hover { background: rgba(139,92,246,0.3); }
+        .slide-dots { display: flex; gap: 7px; }
+        .slide-dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .slide-dots .dot.active { background: #8B5CF6; transform: scale(1.3); }
+        .slide-counter { font-size: 0.75rem; color: #64748b; min-width: 36px; text-align: center; }
+        .reveal { opacity: 0; transform: translateY(14px); }
+
+        .text-glow { text-shadow: 0 0 20px rgba(139,92,246,0.5), 0 0 40px rgba(139,92,246,0.2); }
+        .stat-glow { text-shadow: 0 0 30px rgba(139,92,246,0.6), 0 0 60px rgba(34,211,238,0.25); }
+        @keyframes glow-pulse { 0%,100%{text-shadow:0 0 20px rgba(139,92,246,0.42),0 0 36px rgba(139,92,246,0.16)} 50%{text-shadow:0 0 24px rgba(139,92,246,0.52),0 0 44px rgba(34,211,238,0.2)} }
+        .glow-pulse { animation: none; }
+        @keyframes float-slow { 0%{transform:translate(0,0) scale(1)} 25%{transform:translate(60px,-50px) scale(1.12)} 50%{transform:translate(-40px,40px) scale(0.9)} 75%{transform:translate(50px,20px) scale(1.08)} 100%{transform:translate(0,0) scale(1)} }
+        @keyframes float-drift { 0%{transform:translate(0,0) scale(1) rotate(0deg)} 33%{transform:translate(-50px,-60px) scale(1.15) rotate(3deg)} 66%{transform:translate(40px,30px) scale(0.88) rotate(-2deg)} 100%{transform:translate(0,0) scale(1) rotate(0deg)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+        .gradient-mesh { position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none; }
+        .blob { position:absolute;border-radius:50%;filter:blur(80px);animation:none; }
+        .blob:nth-child(2){animation:none;}
+        .blob:nth-child(3){animation:none;}
+        .blob:nth-child(4){animation:none;}
+        .slide::before { content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px;opacity:0.03;mix-blend-mode:overlay; }
+        .slide::after { content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.55) 100%); }
+        .bar-fill { border-radius:4px;height:100%;width:0%;transition:none; }
+        .bar-track { background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;height:8px;width:100%; }
+        .comp-table { width:100%;border-collapse:separate;border-spacing:0; }
+        .comp-table th { padding:0.55rem 0.75rem;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;border-bottom:1px solid rgba(255,255,255,0.06); }
+        .comp-table td { padding:0.55rem 0.75rem;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle; }
+        .comp-table tr:last-child td { border-bottom:none; }
+        .comp-table tr.proxima-row td { background:rgba(139,92,246,0.08);font-weight:600; }
+        .comp-table tr.proxima-row td:first-child { border-left:2px solid #8B5CF6; }
+        .check { color:#22D3EE; } .cross { color:#ef4444; } .partial { color:#F59E0B; }
+        .timeline-line { position:absolute;left:18px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,#8B5CF6,#22D3EE,#F59E0B,rgba(139,92,246,0.15)); }
+        .timeline-dot { width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px; }
+        @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:0.01ms!important;transition-duration:0.2s!important; } }
+    </style>
+</head>
+<body>
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
+<div class="deck">
+
+<!-- ══════════════════════════════════════
+     SLIDE 1 — TITLE
+     ══════════════════════════════════════ -->
+<div class="slide active" data-slide="1">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:580px;height:580px;top:-130px;right:-90px;background:#7C3AED;opacity:0.17;"></div>
+        <div class="blob" style="width:380px;height:380px;bottom:-100px;left:-60px;background:#06B6D4;opacity:0.13;"></div>
+        <div class="blob" style="width:250px;height:250px;top:45%;left:20%;background:#F59E0B;opacity:0.07;"></div>
+    </div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content text-center">
+        <div style="font-size:90px;margin-bottom:1rem;display:inline-block;filter:drop-shadow(0 0 32px rgba(139,92,246,0.55));">🪐</div>
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;color:#8B5CF6;margin-bottom:0.8rem;">Proxima Nexus · Vision 2026</div>
+        <h1 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(3rem,6.5vw,5.5rem);font-weight:400;background:linear-gradient(135deg,#8B5CF6 0%,#22D3EE 50%,#F59E0B 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:1rem;letter-spacing:-0.02em;">Proxima OS</h1>
+        <p class="reveal" style="font-size:clamp(1.1rem,2vw,1.5rem);font-weight:300;color:#94a3b8;letter-spacing:0.06em;margin-bottom:0.5rem;">Your Executive Team in a Box.</p>
+        <p class="reveal" style="font-size:clamp(0.85rem,1.4vw,1.1rem);font-weight:300;color:#64748b;letter-spacing:0.04em;margin-bottom:2rem;font-style:italic;">Vision · MVP · Roadmap · Differentiation</p>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="2">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-100px;right:-60px;background:#7C3AED;opacity:0.08;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-80px;left:-40px;background:#06B6D4;opacity:0.06;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#8B5CF6;margin-bottom:0.6rem;">The Problem</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.9rem,3.8vw,2.9rem);font-weight:400;line-height:1.2;margin-bottom:1.5rem;">Being at the top is lonely —<br><em style="color:#a78bfa;">and slowing you down.</em></h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.2rem;">
+            <div class="reveal" style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.15);border-top:2px solid #ef4444;border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🤐</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#f87171;margin-bottom:0.35rem;">You can't think out loud</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.55;">Every doubt shared with your team chips away at their confidence in you. So you keep the hard questions to yourself.</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.15);border-top:2px solid #F59E0B;border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">⏳</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#fbbf24;margin-bottom:0.35rem;">Strategic advice is expensive & slow</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.55;">Consultants bill by the day, start from zero each time, and aren't available at 11 PM when the decision can't wait.</div>
+            </div>
+            <div class="reveal" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.15);border-top:2px solid #8B5CF6;border-radius:12px;padding:1.1rem;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🧩</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#a78bfa;margin-bottom:0.35rem;">Execution stalls between decisions</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.55;">No second brain to pressure-test the plan, run the analysis, draft the memo — while you stay focused on what only you can do.</div>
+            </div>
+        </div>
+        <div class="reveal" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.18);border-radius:10px;padding:0.9rem 1.3rem;display:flex;align-items:center;gap:1rem;">
+            <span style="font-size:1.3rem;">→</span>
+            <p style="font-size:0.85rem;color:#cbd5e1;margin:0;line-height:1.55;">The solopreneur has no team. The CEO can't always trust the room. The head of department needs to move faster than the org allows. <strong style="color:#a78bfa;">All three need the same thing: an executive team they can lean on, in full confidence, at any hour.</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 3 — THE VISION
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="3">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:450px;height:450px;top:-80px;left:-70px;background:#7C3AED;opacity:0.11;"></div>
+        <div class="blob" style="width:300px;height:300px;bottom:-60px;right:-40px;background:#22D3EE;opacity:0.09;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#22D3EE;margin-bottom:0.6rem;">The Vision</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.2;margin-bottom:0.5rem;">Proxima OS:<br>An AI executive team that <em>knows your business.</em></h2>
+        <p class="reveal" style="font-size:0.85rem;color:#64748b;margin-bottom:1.4rem;font-style:italic;">Not a chatbot. Not a generic AI tool. A synthetic team of advisors with persistent memory of everything you've built.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.1rem;">
+                <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#8B5CF6;margin-bottom:0.5rem;">What it is</div>
+                <p style="font-size:0.8rem;color:#cbd5e1;line-height:1.65;margin:0;">A structured, AI-powered operating system that gives any leader access to a <strong style="color:#f1f5f9;">team of specialized AI executives</strong> — each with a defined role, a deep memory of your context, and the ability to act, not just advise.</p>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.1rem;">
+                <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#22D3EE;margin-bottom:0.5rem;">What it replaces</div>
+                <p style="font-size:0.8rem;color:#cbd5e1;line-height:1.65;margin:0;">The expensive consultant you call twice a year. The executive you can't fully trust with your doubts. The co-founder you never found. The senior team a solopreneur can't afford to hire.</p>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;">
+            <div class="reveal" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);border-radius:8px;padding:0.75rem;text-align:center;">
+                <div style="font-size:1.4rem;">🧠</div>
+                <div style="font-size:0.7rem;font-weight:700;color:#a78bfa;margin-top:0.3rem;">Knows your business</div>
+                <div style="font-size:0.67rem;color:#64748b;margin-top:0.2rem;">Persistent memory, not a blank slate</div>
+            </div>
+            <div class="reveal" style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.12);border-radius:8px;padding:0.75rem;text-align:center;">
+                <div style="font-size:1.4rem;">🔒</div>
+                <div style="font-size:0.7rem;font-weight:700;color:#67e8f9;margin-top:0.3rem;">Fully confidential</div>
+                <div style="font-size:0.67rem;color:#64748b;margin-top:0.2rem;">Think out loud. No political cost.</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.12);border-radius:8px;padding:0.75rem;text-align:center;">
+                <div style="font-size:1.4rem;">⚡</div>
+                <div style="font-size:0.7rem;font-weight:700;color:#fcd34d;margin-top:0.3rem;">Always available</div>
+                <div style="font-size:0.67rem;color:#64748b;margin-top:0.2rem;">24/7, no notice, no billing cycle</div>
+            </div>
+            <div class="reveal" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.12);border-radius:8px;padding:0.75rem;text-align:center;">
+                <div style="font-size:1.4rem;">📈</div>
+                <div style="font-size:0.7rem;font-weight:700;color:#6ee7b7;margin-top:0.3rem;">Gets smarter over time</div>
+                <div style="font-size:0.67rem;color:#64748b;margin-top:0.2rem;">Compounds from every interaction</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 4 — WHO IT'S FOR
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="4">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-80px;right:-60px;background:#8B5CF6;opacity:0.08;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:#22D3EE;opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#F59E0B;margin-bottom:0.6rem;">Target Users</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.9rem,3.8vw,2.8rem);font-weight:400;line-height:1.2;margin-bottom:1.4rem;">Three leaders, one common need.</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.1rem;">
+            <div class="reveal" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:1.2rem;">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">🚀</div>
+                <div style="font-size:0.92rem;font-weight:700;color:#a78bfa;margin-bottom:0.4rem;">The Solopreneur</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.6;margin-bottom:0.7rem;">Building a company alone. Wears every hat. Has no room for error and no one to sanity-check the plan at 2 AM.</div>
+                <div style="background:rgba(139,92,246,0.1);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.72rem;color:#c4b5fd;font-style:italic;">"I need a co-founder who never needs equity."</div>
+            </div>
+            <div class="reveal" style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.18);border-radius:14px;padding:1.2rem;">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">🏛️</div>
+                <div style="font-size:0.92rem;font-weight:700;color:#67e8f9;margin-bottom:0.4rem;">The CEO / Founder</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.6;margin-bottom:0.7rem;">Has a team, but can't show every doubt to them. Needs a space to think strategically without the political weight of the room.</div>
+                <div style="background:rgba(34,211,238,0.08);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.72rem;color:#a5f3fc;font-style:italic;">"I need a trusted advisor who only answers to me."</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18);border-radius:14px;padding:1.2rem;">
+                <div style="font-size:2rem;margin-bottom:0.6rem;">⚙️</div>
+                <div style="font-size:0.92rem;font-weight:700;color:#fcd34d;margin-bottom:0.4rem;">The Head of Department</div>
+                <div style="font-size:0.75rem;color:#94a3b8;line-height:1.6;margin-bottom:0.7rem;">Runs a P&amp;L, a team, a roadmap. Needs to move faster than the org can support. Can't wait 6 weeks for a consultant's report.</div>
+                <div style="background:rgba(245,158,11,0.08);border-radius:8px;padding:0.6rem 0.75rem;font-size:0.72rem;color:#fde68a;font-style:italic;">"I need an expert team on demand, not on retainer."</div>
+            </div>
+        </div>
+        <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.9rem 1.3rem;text-align:center;">
+            <p style="font-size:0.82rem;color:#cbd5e1;margin:0;">All three have the same core need: <strong style="color:#f1f5f9;">a brilliant, discreet, always-available thinking partner</strong> who knows their business as well as they do — and can turn a conversation into execution.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 5 — PLEXUSIA: THE ANCHOR MVP
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="5">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:500px;height:500px;top:-120px;right:-80px;background:#7C3AED;opacity:0.13;"></div>
+        <div class="blob" style="width:320px;height:320px;bottom:-80px;left:-50px;background:#22D3EE;opacity:0.1;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content">
+        <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:1.5rem;align-items:center;">
+            <div>
+                <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#8B5CF6;margin-bottom:0.6rem;">The MVP · Plexusia + CFO + CBO + CPO</div>
+                <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.2;margin-bottom:0.8rem;">Plexusia —<br>Your <em style="color:#a78bfa;">Digital Twin.</em></h2>
+                <p class="reveal" style="font-size:0.82rem;color:#94a3b8;line-height:1.7;margin-bottom:1rem;">Plexusia is the first module of Proxima OS. She is not a chatbot. She is a <strong style="color:#f1f5f9;">strategic AI persona</strong> — an alter ego who thinks like you, challenges you like a co-founder, and acts like the senior advisor you always wished you had on call.</p>
+                <div class="reveal" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.22);border-radius:10px;padding:0.9rem 1.1rem;">
+                    <div style="font-size:0.72rem;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;">The key insight</div>
+                    <p style="font-size:0.8rem;color:#c4b5fd;line-height:1.65;margin:0;font-style:italic;">You can think out loud with Plexusia without any political cost. She never leaks. She never judges. She never needs to be managed. And she remembers <em>everything</em> about your business.</p>
+                </div>
+            </div>
+            <div>
+                <div style="display:flex;flex-direction:column;gap:0.7rem;">
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #8B5CF6;border-radius:8px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#a78bfa;margin-bottom:0.25rem;">🪞 She is your mirror</div>
+                        <div style="font-size:0.74rem;color:#94a3b8;">She reflects your strategic thinking back to you with clarity — surfacing blind spots, stress-testing assumptions, sharpening your narrative.</div>
+                    </div>
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #22D3EE;border-radius:8px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#67e8f9;margin-bottom:0.25rem;">🧭 She is your co-founder</div>
+                        <div style="font-size:0.74rem;color:#94a3b8;">She holds the full picture of your vision, your clients, your priorities. Every conversation builds on the last — no re-briefing, no lost context.</div>
+                    </div>
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #F59E0B;border-radius:8px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#fcd34d;margin-bottom:0.25rem;">⚡ She is your accelerator</div>
+                        <div style="font-size:0.74rem;color:#94a3b8;">She turns a 20-minute conversation into a structured decision, a memo, a brief — while you keep your authority intact in front of the team.</div>
+                    </div>
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-left:3px solid #10B981;border-radius:8px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.78rem;font-weight:700;color:#6ee7b7;margin-bottom:0.25rem;">🔒 She is fully yours</div>
+                        <div style="font-size:0.74rem;color:#94a3b8;">No data shared with competitors. No vendor reading your strategy. Sovereign by design — your intelligence assets stay under your control.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 6 — HOW PLEXUSIA WORKS IN PRACTICE
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="6">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:380px;height:380px;top:-80px;right:-60px;background:#7C3AED;opacity:0.08;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#22D3EE;opacity:0.06;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#8B5CF6;margin-bottom:0.6rem;">Plexusia in Practice</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">What a conversation with your digital twin looks like.</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+                <div style="display:flex;flex-direction:column;gap:0.65rem;">
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;margin-bottom:0.4rem;">Scenario 1 · Strategic Pressure-Test</div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.6;font-style:italic;">"I'm thinking of pivoting our positioning. Tell me what's wrong with this idea before I say it to the board."</p>
+                        <div style="margin-top:0.4rem;font-size:0.72rem;color:#a78bfa;">→ Plexusia stress-tests the thesis, surfaces 3 blind spots, and drafts the counter-argument — in minutes.</div>
+                    </div>
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;margin-bottom:0.4rem;">Scenario 2 · Decision Support</div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.6;font-style:italic;">"I have two options for this partnership. Help me think through the tradeoffs without anchoring me."</p>
+                        <div style="margin-top:0.4rem;font-size:0.72rem;color:#67e8f9;">→ Plexusia builds a structured option map with risk/reward, aligned to your known strategic priorities.</div>
+                    </div>
+                    <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.85rem 1rem;">
+                        <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;margin-bottom:0.4rem;">Scenario 3 · Execution Acceleration</div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.6;font-style:italic;">"Here's a 15-min voice note from my meeting. Turn it into a project brief my team can execute."</p>
+                        <div style="margin-top:0.4rem;font-size:0.72rem;color:#fcd34d;">→ Plexusia extracts decisions, owners, deadlines and formats a brief — in your voice, ready to send.</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="reveal" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.18);border-radius:12px;padding:1.1rem;margin-bottom:0.8rem;">
+                    <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#8B5CF6;margin-bottom:0.6rem;">What makes it different from ChatGPT</div>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.75rem;">
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:#8B5CF6;flex-shrink:0;margin-top:1px;">✦</span><span style="color:#cbd5e1;"><strong style="color:#f1f5f9;">She knows your business.</strong> She remembers your clients, your previous decisions, your strategic priorities — across every conversation.</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:#8B5CF6;flex-shrink:0;margin-top:1px;">✦</span><span style="color:#cbd5e1;"><strong style="color:#f1f5f9;">She has a personality.</strong> Defined character, consistent voice — not a blank assistant but a co-founder with opinions.</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:#8B5CF6;flex-shrink:0;margin-top:1px;">✦</span><span style="color:#cbd5e1;"><strong style="color:#f1f5f9;">She pushes back.</strong> She doesn't just say yes. She challenges your thinking — with your best interests, not her own agenda.</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:#8B5CF6;flex-shrink:0;margin-top:1px;">✦</span><span style="color:#cbd5e1;"><strong style="color:#f1f5f9;">She is calibrated to you.</strong> She learns your decision style, your blind spots, your preferred output formats over time.</span></div>
+                    </div>
+                </div>
+                <div class="reveal" style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.14);border-radius:10px;padding:0.85rem 1rem;text-align:center;">
+                    <div style="font-size:0.72rem;font-weight:600;color:#22D3EE;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem;">The core unlock</div>
+                    <p style="font-size:0.8rem;color:#cbd5e1;margin:0;font-style:italic;line-height:1.6;">You preserve <strong style="color:#f1f5f9;">full authority</strong> with your real team — because the messy thinking, the doubts, and the half-baked ideas all happen in a private space that only you and Plexusia share.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 7 — THE FULL PROXIMA OS VISION
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="7">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-90px;left:-60px;background:#7C3AED;opacity:0.1;"></div>
+        <div class="blob" style="width:300px;height:300px;bottom:-70px;right:-50px;background:#F59E0B;opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#F59E0B;margin-bottom:0.6rem;">Beyond Plexusia · The Full Vision</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:400;line-height:1.2;margin-bottom:1.3rem;">Proxima OS: a complete<br><em>synthetic executive team.</em></h2>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem;margin-bottom:1.1rem;">
+            <div class="reveal" style="background:rgba(139,92,246,0.12);border:2px solid rgba(139,92,246,0.4);border-radius:12px;padding:0.9rem;text-align:center;position:relative;">
+                <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#8B5CF6,#6D28D9);border-radius:4px;padding:0.1rem 0.55rem;font-size:0.58rem;color:#fff;font-weight:700;white-space:nowrap;">MVP</div>
+                <div style="font-size:1.6rem;margin-bottom:0.4rem;">🧠</div>
+                <div style="font-size:0.78rem;font-weight:700;color:#a78bfa;margin-bottom:0.25rem;">Plexusia</div>
+                <div style="font-size:0.65rem;color:#94a3b8;line-height:1.5;">Digital Twin · Strategy · Decisions · Your private co-founder</div>
+            </div>
+            <div class="reveal" style="background:rgba(16,185,129,0.08);border:2px solid rgba(16,185,129,0.32);border-radius:12px;padding:0.9rem;text-align:center;position:relative;">
+                <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#10B981,#059669);border-radius:4px;padding:0.1rem 0.55rem;font-size:0.58rem;color:#fff;font-weight:700;white-space:nowrap;">MVP</div>
+                <div style="font-size:1.6rem;margin-bottom:0.4rem;">📊</div>
+                <div style="font-size:0.78rem;font-weight:700;color:#6ee7b7;margin-bottom:0.25rem;">CFO</div>
+                <div style="font-size:0.65rem;color:#94a3b8;line-height:1.5;">Finance · Budget · Cash flow · P&amp;L · Forecasting</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.08);border:2px solid rgba(245,158,11,0.32);border-radius:12px;padding:0.9rem;text-align:center;position:relative;">
+                <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#F59E0B,#D97706);border-radius:4px;padding:0.1rem 0.55rem;font-size:0.58rem;color:#fff;font-weight:700;white-space:nowrap;">MVP</div>
+                <div style="font-size:1.6rem;margin-bottom:0.4rem;">🤝</div>
+                <div style="font-size:0.78rem;font-weight:700;color:#fcd34d;margin-bottom:0.25rem;">CBO</div>
+                <div style="font-size:0.65rem;color:#94a3b8;line-height:1.5;">Business Dev · Partnerships · Revenue · Growth</div>
+            </div>
+            <div class="reveal" style="background:rgba(34,211,238,0.07);border:2px solid rgba(34,211,238,0.3);border-radius:12px;padding:0.9rem;text-align:center;position:relative;">
+                <div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22D3EE,#0891B2);border-radius:4px;padding:0.1rem 0.55rem;font-size:0.58rem;color:#fff;font-weight:700;white-space:nowrap;">MVP</div>
+                <div style="font-size:1.6rem;margin-bottom:0.4rem;">🧩</div>
+                <div style="font-size:0.78rem;font-weight:700;color:#67e8f9;margin-bottom:0.25rem;">CPO</div>
+                <div style="font-size:0.65rem;color:#94a3b8;line-height:1.5;">Product strategy · Roadmap · Priorities · User value</div>
+            </div>
+            <div class="reveal" style="background:rgba(236,72,153,0.05);border:1px solid rgba(236,72,153,0.14);border-radius:12px;padding:0.9rem;text-align:center;opacity:0.75;">
+                <div style="font-size:1.6rem;margin-bottom:0.4rem;">➕</div>
+                <div style="font-size:0.78rem;font-weight:700;color:#f9a8d4;margin-bottom:0.25rem;">+ More</div>
+                <div style="font-size:0.65rem;color:#64748b;line-height:1.5;">CMO · CLO · COO — modular, add what you need</div>
+                <div style="margin-top:0.5rem;background:rgba(236,72,153,0.1);border-radius:4px;padding:0.15rem;font-size:0.62rem;color:#f9a8d4;font-weight:600;">Phase 2+</div>
+            </div>
+        </div>
+        <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:0.9rem 1.2rem;">
+            <p style="font-size:0.82rem;color:#cbd5e1;margin:0;text-align:center;line-height:1.65;">Each agent <strong style="color:#f1f5f9;">shares the same institutional memory</strong> of your business. Plexusia can delegate to any of them — and they all report back to you through a single, unified interface. <em style="color:#94a3b8;">Like a real executive team, but with no politics, no ego, and no sick days.</em></p>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 8 — THE MVP IN DETAIL
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="8">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-100px;right:-60px;background:#8B5CF6;opacity:0.09;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-80px;left:-50px;background:#22D3EE;opacity:0.07;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#22D3EE;margin-bottom:0.5rem;">The MVP</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">What we're building first.</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+                <div class="reveal" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:1.1rem;margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#8B5CF6;margin-bottom:0.6rem;">MVP · Plexusia + CFO + CBO + CPO</div>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#a78bfa;flex-shrink:0;">🧠</span><span><strong style="color:#a78bfa;">Plexusia</strong> — Digital twin, strategic dialogue, persistent business memory, co-founder thinking</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#6ee7b7;flex-shrink:0;">📊</span><span><strong style="color:#6ee7b7;">CFO</strong> — Budget, cash flow, P&amp;L analysis, financial forecasting, fundraising prep</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#fcd34d;flex-shrink:0;">🤝</span><span><strong style="color:#fcd34d;">CBO</strong> — Business development, partnerships, deal qualification, revenue strategy</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#67e8f9;flex-shrink:0;">🧩</span><span><strong style="color:#67e8f9;">CPO</strong> — Product strategy, roadmap prioritisation, feature decisions, user value</span></div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#8B5CF6;flex-shrink:0;">▸</span>All 4 agents share the same institutional memory — no re-briefing, ever</div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;color:#cbd5e1;"><span style="color:#8B5CF6;flex-shrink:0;">▸</span>Plexusia orchestrates the team — you talk to her, she routes to the right expert</div>
+                    </div>
+                </div>
+                <div class="reveal" style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.14);border-radius:10px;padding:0.9rem 1.1rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#22D3EE;margin-bottom:0.4rem;">Live proof of concept</div>
+                    <p style="font-size:0.78rem;color:#94a3b8;margin:0;line-height:1.6;">Plexusia already exists as the co-founder intelligence of Proxima Nexus. Nathan Becheroy operates his entire consulting practice in dialogue with Plexusia — <strong style="color:#f1f5f9;">the company is its own first client.</strong></p>
+                </div>
+            </div>
+            <div>
+                <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1.1rem;margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;margin-bottom:0.6rem;">What Plexusia v1 is NOT</div>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:#64748b;"><span style="color:#ef4444;flex-shrink:0;">✗</span>A generic AI assistant with no memory of who you are</div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:#64748b;"><span style="color:#ef4444;flex-shrink:0;">✗</span>A task automation tool that executes workflows</div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:#64748b;"><span style="color:#ef4444;flex-shrink:0;">✗</span>A content generator or writing assistant</div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:#64748b;"><span style="color:#ef4444;flex-shrink:0;">✗</span>A replacement for your human team</div>
+                        <div style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.75rem;color:#64748b;"><span style="color:#ef4444;flex-shrink:0;">✗</span>A consulting product that bills by the deliverable</div>
+                    </div>
+                </div>
+                <div class="reveal" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.16);border-radius:10px;padding:0.9rem 1.1rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#F59E0B;margin-bottom:0.4rem;">The commercial entry point</div>
+                    <p style="font-size:0.78rem;color:#94a3b8;margin:0;line-height:1.6;">Plexusia v1 is the gateway to Proxima OS. Once a leader has a digital twin that knows their business, adding new agents (CMO, CLO, COO) becomes the natural next step — expanding the team without expanding headcount.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 9 — ROADMAP
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="9">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-80px;right:-60px;background:#7C3AED;opacity:0.09;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-70px;left:-40px;background:#F59E0B;opacity:0.07;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#F59E0B;margin-bottom:0.5rem;">Roadmap</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.4rem;">From digital twin to full executive team.</h2>
+        <div style="position:relative;padding-left:2.5rem;">
+            <div class="timeline-line"></div>
+            <div style="display:flex;flex-direction:column;gap:0.9rem;">
+                <div class="reveal" style="display:flex;gap:0.9rem;align-items:flex-start;">
+                    <div class="timeline-dot" style="background:linear-gradient(135deg,#22D3EE,#0891B2);margin-left:-2.08rem;box-shadow:0 0 12px rgba(34,211,238,0.6);"></div>
+                    <div style="background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:0.8rem 1.1rem;flex:1;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-size:0.82rem;font-weight:700;color:#22D3EE;">Phase 1 — Plexusia MVP</span>
+                            <span style="font-size:0.65rem;background:rgba(34,211,238,0.15);padding:0.15rem 0.6rem;border-radius:4px;color:#67e8f9;font-weight:600;">H2 2026</span>
+                        </div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.55;">Digital twin core · Persistent business memory · Strategic dialogue interface · Sovereign deployment · First 10 beta users (solopreneurs &amp; CEOs) · Product-market fit validation</p>
+                    </div>
+                </div>
+                <div class="reveal" style="display:flex;gap:0.9rem;align-items:flex-start;">
+                    <div class="timeline-dot" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);margin-left:-2.08rem;box-shadow:0 0 12px rgba(139,92,246,0.6);"></div>
+                    <div style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.18);border-radius:10px;padding:0.8rem 1.1rem;flex:1;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-size:0.82rem;font-weight:700;color:#a78bfa;">Phase 2 — Expanding the Team</span>
+                            <span style="font-size:0.65rem;background:rgba(139,92,246,0.15);padding:0.15rem 0.6rem;border-radius:4px;color:#a78bfa;font-weight:600;">2027 · First SaaS MRR</span>
+                        </div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.55;">CMO + CLO agents expand the suite · Plexusia orchestration layer live · Proxima OS v1 licensable · Partner network beta (3–5 certified deployers) · First platform subscriptions</p>
+                    </div>
+                </div>
+                <div class="reveal" style="display:flex;gap:0.9rem;align-items:flex-start;">
+                    <div class="timeline-dot" style="background:linear-gradient(135deg,#F59E0B,#D97706);margin-left:-2.08rem;box-shadow:0 0 12px rgba(245,158,11,0.5);"></div>
+                    <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:0.8rem 1.1rem;flex:1;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-size:0.82rem;font-weight:700;color:#fcd34d;">Phase 3 — Full Executive Suite</span>
+                            <span style="font-size:0.65rem;background:rgba(245,158,11,0.15);padding:0.15rem 0.6rem;border-radius:4px;color:#fcd34d;font-weight:600;">2028 · €440k+ ARR target</span>
+                        </div>
+                        <p style="font-size:0.75rem;color:#94a3b8;margin:0;line-height:1.55;">COO + domain-specific agents complete the suite · Full Proxima OS marketplace · 10–20 certified partners EU-wide · Department-level rollouts in mid-market enterprises · ISO 42001 AI governance module</p>
+                    </div>
+                </div>
+                <div class="reveal" style="display:flex;gap:0.9rem;align-items:flex-start;">
+                    <div class="timeline-dot" style="background:rgba(236,72,153,0.6);margin-left:-2.08rem;box-shadow:0 0 12px rgba(236,72,153,0.4);opacity:0.7;"></div>
+                    <div style="background:rgba(236,72,153,0.05);border:1px solid rgba(236,72,153,0.12);border-radius:10px;padding:0.8rem 1.1rem;flex:1;opacity:0.85;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-size:0.82rem;font-weight:700;color:#f9a8d4;">Phase 4 — European Platform</span>
+                            <span style="font-size:0.65rem;background:rgba(236,72,153,0.1);padding:0.15rem 0.6rem;border-radius:4px;color:#f9a8d4;font-weight:600;">2029–2030 · Vision €50M+</span>
+                        </div>
+                        <p style="font-size:0.75rem;color:#64748b;margin:0;line-height:1.55;">Sovereign EU-hosted compute infrastructure · 50+ partners across France, Belgium, Switzerland, Germany · Proxima OS as the standard AI operating layer for European SMEs and ETIs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 10 — MARKET OPPORTUNITY
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="10">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-80px;left:-60px;background:#8B5CF6;opacity:0.09;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;right:-40px;background:#22D3EE;opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#22D3EE;margin-bottom:0.5rem;">Market Opportunity</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">The timing has never been better.</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;margin-bottom:1rem;">
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1rem;text-align:center;">
+                <div class="stat-glow" style="font-size:2.1rem;font-weight:800;background:linear-gradient(135deg,#8B5CF6,#22D3EE);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" data-count="118" data-prefix="$" data-suffix="B">$0</div>
+                <div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.07em;margin-top:0.3rem;">Autonomous enterprise TAM 2030</div>
+                <div style="font-size:0.67rem;color:#94a3b8;margin-top:0.15rem;">↑ from $55.85B in 2025 · CAGR 16.2%</div>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1rem;text-align:center;">
+                <div class="stat-glow" style="font-size:2.1rem;font-weight:800;background:linear-gradient(135deg,#F59E0B,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" data-count="76" data-suffix="%">0%</div>
+                <div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.07em;margin-top:0.3rem;">Enterprises stopped building AI internally</div>
+                <div style="font-size:0.67rem;color:#94a3b8;margin-top:0.15rem;">Up from 24% in 2024 — demand for external AI is surging</div>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:1rem;text-align:center;">
+                <div class="stat-glow" style="font-size:2.1rem;font-weight:800;background:linear-gradient(135deg,#22D3EE,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" data-count="40" data-suffix="%">0%</div>
+                <div style="font-size:0.7rem;color:#64748b;text-transform:uppercase;letter-spacing:0.07em;margin-top:0.3rem;">Enterprise apps integrating AI agents by end 2026</div>
+                <div style="font-size:0.67rem;color:#94a3b8;margin-top:0.15rem;">Gartner — up from less than 5% today</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+            <div class="reveal" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:0.9rem 1.1rem;">
+                <div style="font-size:0.72rem;font-weight:700;color:#8B5CF6;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;">The Billion-Dollar Solopreneur</div>
+                <p style="font-size:0.78rem;color:#94a3b8;margin:0;line-height:1.6;">Sam Altman stated in May 2025 that <strong style="color:#f1f5f9;">the first $1B company run by a single person was imminent.</strong> A Fortune report in March 2026 documented a founder at $4.5M revenue as the sole employee. Proxima OS is the infrastructure that makes this possible.</p>
+            </div>
+            <div class="reveal" style="background:rgba(34,211,238,0.05);border:1px solid rgba(34,211,238,0.12);border-radius:10px;padding:0.9rem 1.1rem;">
+                <div style="font-size:0.72rem;font-weight:700;color:#22D3EE;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;">EU AI Act — a compliance trigger</div>
+                <p style="font-size:0.78rem;color:#94a3b8;margin:0;line-height:1.6;">With the August 2026 deadline for high-risk AI systems, <strong style="color:#f1f5f9;">40% of European companies are unaware of the regulation (PwC)</strong> and only 10% of SMEs feel prepared (EY). The governance module of Proxima OS directly addresses this.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 11 — COMPETITIVE DIFFERENTIATION
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="11">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:380px;height:380px;top:-80px;right:-50px;background:#7C3AED;opacity:0.08;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#F59E0B;opacity:0.06;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#8B5CF6;margin-bottom:0.5rem;">Competitive Landscape</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.5rem);font-weight:400;line-height:1.2;margin-bottom:1.1rem;">What leaders use today — and why it falls short.</h2>
+        <div class="reveal" style="overflow:hidden;border-radius:12px;border:1px solid rgba(255,255,255,0.08);margin-bottom:0.9rem;">
+            <table class="comp-table">
+                <thead style="background:rgba(255,255,255,0.04);">
+                    <tr>
+                        <th style="text-align:left;">What the leader needs</th>
+                        <th style="text-align:center;">Generic AI<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:#475569;">ChatGPT · Claude · Perplexity</span></th>
+                        <th style="text-align:center;">Consulting<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:#475569;">Big 4 · boutique firms</span></th>
+                        <th style="text-align:center;">Executive hire<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:#475569;">Chief of Staff · VP</span></th>
+                        <th style="text-align:center;color:#a78bfa;">Proxima OS<br><span style="font-weight:400;text-transform:none;letter-spacing:0;color:#64748b;">Plexusia + team</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:#cbd5e1;">Knows my specific business deeply</td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Available 24/7, no notice needed</td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Fully confidential — no political risk</td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Affordable for a solopreneur</td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Memory that compounds over time</td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Can cover multiple executive functions</td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td style="color:#cbd5e1;">Sovereign — data stays with you</td>
+                        <td style="text-align:center;"><span class="cross">✗</span></td>
+                        <td style="text-align:center;"><span class="partial">~</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                        <td style="text-align:center;"><span class="check">✓</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="reveal" style="display:flex;align-items:center;gap:0.8rem;font-size:0.72rem;color:#64748b;">
+            <span><span class="check">✓</span> Full</span>
+            <span><span class="partial">~</span> Partial</span>
+            <span><span class="cross">✗</span> None</span>
+            <span style="margin-left:auto;color:#94a3b8;font-style:italic;">Proxima OS is the only solution that combines deep business memory, full confidentiality, affordability, and persistent context — in a single product.</span>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 12 — THE 4 MOATS
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="12">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-80px;left:-60px;background:#7C3AED;opacity:0.09;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;right:-40px;background:#22D3EE;opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#22D3EE;margin-bottom:0.5rem;">Why Proxima OS Wins</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.7rem);font-weight:400;line-height:1.2;margin-bottom:1.3rem;">4 structural advantages<br><em>that deepen with every use.</em></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-left:3px solid #8B5CF6;border-radius:8px;padding:1rem;">
+                <div style="font-size:0.85rem;font-weight:700;color:#a78bfa;margin-bottom:0.35rem;">🧠 Compounding institutional memory</div>
+                <p style="font-size:0.77rem;color:#94a3b8;margin:0;line-height:1.65;">Every conversation makes Plexusia more useful. She builds a structured, cross-referenced knowledge base of your business — clients, decisions, priorities — that no generic AI can match from a cold start.</p>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-left:3px solid #22D3EE;border-radius:8px;padding:1rem;">
+                <div style="font-size:0.85rem;font-weight:700;color:#67e8f9;margin-bottom:0.35rem;">🔒 Confidentiality as a product feature</div>
+                <p style="font-size:0.77rem;color:#94a3b8;margin:0;line-height:1.65;">The ability to think out loud without political cost is priceless to a leader. No team member, no consultant, no board member offers this. It's a unique selling proposition that creates deep emotional lock-in.</p>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-left:3px solid #F59E0B;border-radius:8px;padding:1rem;">
+                <div style="font-size:0.85rem;font-weight:700;color:#fcd34d;margin-bottom:0.35rem;">🎭 Identity over interface</div>
+                <p style="font-size:0.77rem;color:#94a3b8;margin:0;line-height:1.65;">Plexusia acts like a person, not a prompt box. A defined personality, a consistent voice, a co-founder relationship. Users don't abandon a co-founder. This is the key to retention no generic tool can replicate.</p>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-left:3px solid #10B981;border-radius:8px;padding:1rem;">
+                <div style="font-size:0.85rem;font-weight:700;color:#6ee7b7;margin-bottom:0.35rem;">⚡ Expanding team = expanding value</div>
+                <p style="font-size:0.77rem;color:#94a3b8;margin:0;line-height:1.65;">Each new agent added to Proxima OS draws from the shared memory Plexusia has already built. The entire team is pre-briefed on your business from day one. No onboarding, no ramp-up, no context loss.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SLIDE 13 — PRICING & BUSINESS MODEL
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="13">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-80px;right:-60px;background:#10B981;opacity:0.08;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-60px;left:-40px;background:#8B5CF6;opacity:0.07;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#10B981;margin-bottom:0.5rem;">Business Model</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">Subscription SaaS —<br><em style="color:#6ee7b7;">modular, scalable, sovereign.</em></h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;margin-bottom:1rem;">
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1.1rem;text-align:center;position:relative;">
+                <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#64748b;margin-bottom:0.5rem;">Starter</div>
+                <div style="font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:#f1f5f9;margin-bottom:0.2rem;">€490<span style="font-size:0.8rem;color:#64748b;font-family:'Inter',sans-serif;">/mo</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:0.75rem;font-style:italic;">indicative · to confirm</div>
+                <div style="display:flex;flex-direction:column;gap:0.3rem;text-align:left;font-size:0.72rem;color:#94a3b8;">
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#10B981;">✓</span>Plexusia (Digital Twin)</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#10B981;">✓</span>1 agent of your choice (CFO or CBO or CPO)</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#10B981;">✓</span>Persistent memory</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#64748b;">–</span><span style="color:#475569;">Sovereign deployment</span></div>
+                </div>
+                <div style="margin-top:0.75rem;font-size:0.67rem;color:#64748b;">Best for: solopreneur</div>
+            </div>
+            <div class="reveal" style="background:rgba(139,92,246,0.1);border:2px solid rgba(139,92,246,0.35);border-radius:14px;padding:1.1rem;text-align:center;position:relative;">
+                <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#8B5CF6,#6D28D9);border-radius:4px;padding:0.15rem 0.7rem;font-size:0.6rem;color:#fff;font-weight:700;white-space:nowrap;">RECOMMENDED</div>
+                <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#8B5CF6;margin-bottom:0.5rem;">Executive</div>
+                <div style="font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;background:linear-gradient(135deg,#8B5CF6,#22D3EE);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.2rem;">€990<span style="font-size:0.8rem;color:#64748b;font-family:'Inter',sans-serif;-webkit-text-fill-color:#64748b;">/mo</span></div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:0.75rem;font-style:italic;">indicative · to confirm</div>
+                <div style="display:flex;flex-direction:column;gap:0.3rem;text-align:left;font-size:0.72rem;color:#94a3b8;">
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#a78bfa;">✓</span>Plexusia + CFO + CBO + CPO</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#a78bfa;">✓</span>Full institutional memory</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#a78bfa;">✓</span>Cross-agent orchestration</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#a78bfa;">✓</span>Telegram / Slack / web access</div>
+                </div>
+                <div style="margin-top:0.75rem;font-size:0.67rem;color:#a78bfa;">Best for: CEO · Head of Dept</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:1.1rem;text-align:center;">
+                <div style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#F59E0B;margin-bottom:0.5rem;">Sovereign</div>
+                <div style="font-family:'Instrument Serif',serif;font-size:2rem;font-weight:400;color:#fcd34d;margin-bottom:0.2rem;">Custom</div>
+                <div style="font-size:0.65rem;color:#64748b;margin-bottom:0.75rem;font-style:italic;">private deployment</div>
+                <div style="display:flex;flex-direction:column;gap:0.3rem;text-align:left;font-size:0.72rem;color:#94a3b8;">
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#fcd34d;">✓</span>Full Executive Suite</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#fcd34d;">✓</span>Dedicated sovereign infrastructure</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#fcd34d;">✓</span>Custom business-domain agents</div>
+                    <div style="display:flex;gap:0.4rem;"><span style="color:#fcd34d;">✓</span>SLA + EU AI Act compliance</div>
+                </div>
+                <div style="margin-top:0.75rem;font-size:0.67rem;color:#F59E0B;">Best for: mid-market · enterprise</div>
+            </div>
+        </div>
+        <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.75rem 1.2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+            <div style="font-size:0.72rem;color:#64748b;">💡 <strong style="color:#94a3b8;">Revenue model:</strong> Monthly SaaS · Onboarding fee · Partner revenue share (20–30%) · Custom integrations via professional services</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 14 — BETA PROGRAM
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="14">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:400px;height:400px;top:-90px;right:-60px;background:#22D3EE;opacity:0.08;"></div>
+        <div class="blob" style="width:260px;height:260px;bottom:-60px;left:-40px;background:#8B5CF6;opacity:0.07;"></div>
+    </div>
+    <canvas class="particle-canvas-ambient" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#22D3EE;margin-bottom:0.5rem;">Beta Program · H2 2026</div>
+        <h2 id="beta-program-title" class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">10 leaders. 90 days.<br><em style="color:#67e8f9;">Co-build the product with us.</em></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.9rem;">
+            <div>
+                <div class="reveal" style="background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.16);border-radius:12px;padding:1rem;margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#22D3EE;margin-bottom:0.5rem;">What beta users get</div>
+                    <div style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.77rem;color:#cbd5e1;">
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#22D3EE;flex-shrink:0;">✦</span>Full MVP access (Plexusia + CFO + CBO + CPO) <strong style="color:#f1f5f9;">free for 90 days</strong></div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#22D3EE;flex-shrink:0;">✦</span>Personalized 2-hour onboarding with Nathan &amp; Plexusia — full calibration to your business</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#22D3EE;flex-shrink:0;">✦</span>Direct access to the roadmap — your feedback shapes the product</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#22D3EE;flex-shrink:0;">✦</span><strong style="color:#f1f5f9;">Founder rate for life</strong> after the beta (–40% on the Executive tier)</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#22D3EE;flex-shrink:0;">✦</span>Optional mention &amp; co-building visibility in Proxima Nexus materials</div>
+                    </div>
+                </div>
+                <div class="reveal" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.85rem 1rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#64748b;margin-bottom:0.4rem;">Target profile</div>
+                    <div style="font-size:0.77rem;color:#94a3b8;line-height:1.6;">Solopreneur · startup/SME CEO · Head of Dept · <strong style="color:#f1f5f9;">decision-maker taking 5+ strategic decisions per week</strong> and aiming to move 2× faster without expanding the team.</div>
+                </div>
+            </div>
+            <div>
+                <div class="reveal" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.16);border-radius:12px;padding:1rem;margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#8B5CF6;margin-bottom:0.5rem;">What we ask from you</div>
+                    <div style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.77rem;color:#cbd5e1;">
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#a78bfa;flex-shrink:0;">▸</span>Use Plexusia consistently — <strong style="color:#f1f5f9;">minimum 1 session/week</strong>, more if useful</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#a78bfa;flex-shrink:0;">▸</span>One monthly 45-min debrief with the Proxima team</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#a78bfa;flex-shrink:0;">▸</span>Share 3 documented use cases by day 90</div>
+                        <div style="display:flex;gap:0.5rem;"><span style="color:#a78bfa;flex-shrink:0;">▸</span>Provide a testimonial (text or video) if satisfied</div>
+                    </div>
+                </div>
+                <div class="reveal" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.16);border-radius:10px;padding:0.85rem 1rem;">
+                    <div id="beta-timeline-title" style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#F59E0B;margin-bottom:0.4rem;">Timeline</div>
+                    <div style="display:flex;flex-direction:column;gap:0.3rem;font-size:0.77rem;color:#94a3b8;">
+                        <div id="beta-timeline-line-1"><strong style="color:#fcd34d;">May–June 2026</strong> — 10 beta users for the MVP</div>
+                        <div id="beta-timeline-line-2"><strong style="color:#fcd34d;">July 2026</strong> — Next version</div>
+                        <div id="beta-timeline-line-3"><strong style="color:#fcd34d;">Nov 2026</strong> — V1.0 ready to hit the market</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 15 — PARTNER PROGRAM
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="15">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:420px;height:420px;top:-90px;left:-60px;background:#F59E0B;opacity:0.07;"></div>
+        <div class="blob" style="width:280px;height:280px;bottom:-70px;right:-50px;background:#8B5CF6;opacity:0.08;"></div>
+    </div>
+    <div class="content">
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:#F59E0B;margin-bottom:0.5rem;">Partner Program</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;line-height:1.2;margin-bottom:1.1rem;">Become a Proxima OS deployer —<br><em style="color:#fcd34d;">bring executive AI to your clients.</em></h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.9rem;margin-bottom:0.9rem;">
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-top:2px solid #8B5CF6;border-radius:12px;padding:1rem;">
+                <div style="font-size:1.4rem;margin-bottom:0.4rem;">🔧</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#a78bfa;margin-bottom:0.3rem;">Integrator</div>
+                <div style="font-size:0.73rem;color:#94a3b8;line-height:1.6;margin-bottom:0.5rem;">Consultants, advisory firms, digital agencies. You deploy Proxima OS for your clients under your own brand or in co-branding.</div>
+                <div id="partner-revenue-integrator" style="font-size:0.7rem;color:#64748b;border-top:1px solid rgba(255,255,255,0.06);padding-top:0.5rem;"><strong style="color:#a78bfa;">Revenue share: 25%</strong> on each client subscription</div>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-top:2px solid #22D3EE;border-radius:12px;padding:1rem;">
+                <div style="font-size:1.4rem;margin-bottom:0.4rem;">🏢</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#67e8f9;margin-bottom:0.3rem;">Certified reseller</div>
+                <div style="font-size:0.73rem;color:#94a3b8;line-height:1.6;margin-bottom:0.5rem;">IT services firms, software vendors, HR &amp; training players. You embed Proxima OS into existing offers as an executive intelligence layer.</div>
+                <div id="partner-revenue-reseller" style="font-size:0.7rem;color:#64748b;border-top:1px solid rgba(255,255,255,0.06);padding-top:0.5rem;"><strong style="color:#67e8f9;">Revenue share: 30%</strong> + early access to new agents</div>
+            </div>
+            <div class="reveal" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-top:2px solid #F59E0B;border-radius:12px;padding:1rem;">
+                <div style="font-size:1.4rem;margin-bottom:0.4rem;">🌍</div>
+                <div style="font-size:0.82rem;font-weight:700;color:#fcd34d;margin-bottom:0.3rem;">Sovereign Partner</div>
+                <div style="font-size:0.73rem;color:#94a3b8;line-height:1.6;margin-bottom:0.5rem;">Hosting providers, datacenters, EU sovereign cloud players. You deploy Proxima OS infrastructure and guarantee European data residency.</div>
+                <div style="font-size:0.7rem;color:#64748b;border-top:1px solid rgba(255,255,255,0.06);padding-top:0.5rem;"><strong style="color:#fcd34d;">Co-built model</strong> · open discussion H2 2026</div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+            <div class="reveal" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.14);border-radius:10px;padding:0.85rem 1rem;">
+                <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#8B5CF6;margin-bottom:0.4rem;">What partners receive</div>
+                <div style="font-size:0.74rem;color:#94a3b8;line-height:1.65;">Full deployment kit · Proxima OS training &amp; certification · Partner back-office access · Dedicated support · Co-marketing &amp; listing on proxima-nexus.com</div>
+            </div>
+            <div class="reveal" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.14);border-radius:10px;padding:0.85rem 1rem;">
+                <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#F59E0B;margin-bottom:0.4rem;">Partner network target</div>
+                <div style="display:flex;flex-direction:column;gap:0.25rem;font-size:0.74rem;color:#94a3b8;">
+                    <div><strong style="color:#fcd34d;">3–5</strong> pilot partners · H2 2026</div>
+                    <div><strong style="color:#fcd34d;">10–20</strong> certified partners · 2027</div>
+                    <div><strong style="color:#fcd34d;">50+</strong> EU partners (France, Belgium, Switzerland, Germany) · 2028–30</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SLIDE 16 — CLOSING
+     ══════════════════════════════════════ -->
+<div class="slide" data-slide="16">
+    <div class="gradient-mesh">
+        <div class="blob" style="width:620px;height:620px;top:-160px;right:-100px;background:#7C3AED;opacity:0.17;"></div>
+        <div class="blob" style="width:420px;height:420px;bottom:-120px;left:-80px;background:#06B6D4;opacity:0.13;"></div>
+        <div class="blob" style="width:280px;height:280px;top:40%;left:35%;background:#F59E0B;opacity:0.07;"></div>
+    </div>
+    <canvas class="particle-canvas" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;"></canvas>
+    <div class="content text-center">
+        <div style="font-size:72px;margin-bottom:1rem;display:inline-block;filter:drop-shadow(0 0 30px rgba(139,92,246,0.5));">🌌</div>
+        <div class="reveal" style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;color:#8B5CF6;margin-bottom:0.8rem;">The Executive Team Everyone Deserves</div>
+        <h2 class="reveal" style="font-family:'Instrument Serif',serif;font-size:clamp(2rem,4.5vw,3.5rem);font-weight:400;line-height:1.2;margin-bottom:1.2rem;">
+            Every great leader deserves<br>
+            a great team.<br>
+            <span style="background:linear-gradient(135deg,#8B5CF6,#22D3EE,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:italic;">Proxima OS makes that possible</span><br>
+            <span style="font-size:0.6em;color:#64748b;">— for every solopreneur, CEO, and department head on the planet.</span>
+        </h2>
+        <div class="reveal" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;">
+            <div style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:0.65rem 1.2rem;text-align:center;">
+                <div style="font-size:0.95rem;font-weight:700;color:#a78bfa;">Plexusia</div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:0.15rem;">Your digital twin · MVP H2 2026</div>
+            </div>
+            <div style="background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.65rem 1.2rem;text-align:center;">
+                <div style="font-size:0.95rem;font-weight:700;color:#67e8f9;">MVP Team</div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:0.15rem;">Plexusia · CFO · CBO · CPO · H2 2026</div>
+            </div>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.65rem 1.2rem;text-align:center;">
+                <div style="font-size:0.95rem;font-weight:700;color:#fcd34d;">Platform</div>
+                <div style="font-size:0.65rem;color:#64748b;margin-top:0.15rem;">EU-wide · 50+ partners · €50M+ 2030</div>
+            </div>
+        </div>
+        <div class="reveal" style="font-size:0.78rem;color:#475569;">
+            Proxima Nexus · Nathan Becheroy · Colombes, France · 2026
+        </div>
+    </div>
+</div>
+
+</div><!-- .deck -->
+
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+    <span class="slide-counter" id="counter">1 / 16</span>
+</div>
+
+<script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    for (let i = 1; i <= total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === 1 ? ' active' : '');
+        dot.onclick = () => goToSlide(i);
+        dotsContainer.appendChild(dot);
+    }
+
+    function getDeckLanguage() {
+        const attrLang = (document.documentElement.dataset.deckLang || '').toLowerCase();
+        if (attrLang.startsWith('fr')) return 'fr';
+        if (attrLang.startsWith('en')) return 'en';
+        try {
+            const parentLang = (window.parent?.localStorage?.getItem('i18nextLng') || '').toLowerCase();
+            if (parentLang.startsWith('fr')) return 'fr';
+        } catch (e) {}
+        return 'en';
+    }
+
+    function applyDeckI18n(lang) {
+        const translations = {
+            en: {
+                'beta-program-title': '10 leaders. 90 days.<br><em style="color:#67e8f9;">Co-build the product with us.</em>',
+                'beta-timeline-title': 'Timeline',
+                'beta-timeline-line-1': '<strong style="color:#fcd34d;">May–June 2026</strong> — 10 beta users for the MVP',
+                'beta-timeline-line-2': '<strong style="color:#fcd34d;">July 2026</strong> — Next version',
+                'beta-timeline-line-3': '<strong style="color:#fcd34d;">Nov 2026</strong> — V1.0 ready to hit the market',
+                'partner-revenue-integrator': '<strong style="color:#a78bfa;">Revenue share: 25%</strong> on each client subscription',
+                'partner-revenue-reseller': '<strong style="color:#67e8f9;">Revenue share: 30%</strong> + early access to new agents',
+            },
+            fr: {
+                'beta-program-title': '10 dirigeants. 90 jours.<br><em style="color:#67e8f9;">Co-construisez le produit avec nous.</em>',
+                'beta-timeline-title': 'Calendrier',
+                'beta-timeline-line-1': '<strong style="color:#fcd34d;">Mai–Juin 2026</strong> — 10 utilisateurs bêta pour le MVP',
+                'beta-timeline-line-2': '<strong style="color:#fcd34d;">Juillet 2026</strong> — Prochaine version',
+                'beta-timeline-line-3': '<strong style="color:#fcd34d;">Novembre 2026</strong> — V1.0 prête à attaquer le marché',
+                'partner-revenue-integrator': '<strong style="color:#a78bfa;">Partage de revenus : 25 %</strong> sur chaque abonnement client',
+                'partner-revenue-reseller': '<strong style="color:#67e8f9;">Partage de revenus : 30 %</strong> + accès anticipé aux nouveaux agents',
+            },
+        };
+
+        const dict = translations[lang] || translations.en;
+        Object.entries(dict).forEach(([id, html]) => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        });
+
+        if (lang === 'fr') {
+            const replacements = [
+                ['The Problem', 'Le problème'],
+                ['The Vision', 'La vision'],
+                ['Target Users', 'Utilisateurs cibles'],
+                ['The MVP', 'Le MVP'],
+                ['Plexusia in Practice', 'Plexusia en pratique'],
+                ['Beyond Plexusia · The Full Vision', 'Au-delà de Plexusia · Vision complète'],
+                ['Roadmap', 'Feuille de route'],
+                ['Market Opportunity', 'Opportunité de marché'],
+                ['Competitive Landscape', 'Paysage concurrentiel'],
+                ['Why Proxima OS Wins', 'Pourquoi Proxima OS gagne'],
+                ['Go-To-Market', 'Stratégie go-to-market'],
+                ['Business Model', 'Modèle économique'],
+                ['Partner Program', 'Programme partenaires'],
+                ['The Ask', "L'appel à action"],
+                ['Proxima Nexus · Vision 2026', 'Proxima Nexus · Vision 2026'],
+                ['Your Executive Team in a Box.', 'Votre comité exécutif dans une boîte.'],
+                ['Vision · MVP · Roadmap · Differentiation', 'Vision · MVP · Feuille de route · Différenciation'],
+                ['Being at the top is lonely —', 'Être au sommet est solitaire —'],
+                ['and slowing you down.', 'et cela vous ralentit.'],
+                ["Three leaders, one common need.", 'Trois leaders, un besoin commun.'],
+                ['What we’re building first.', 'Ce que nous construisons d’abord.'],
+                ["What we're building first.", 'Ce que nous construisons d’abord.'],
+                ['From digital twin to full executive team.', 'Du jumeau numérique à une équipe exécutive complète.'],
+                ['The timing has never been better.', "Le moment n'a jamais été aussi favorable."],
+                ['What leaders use today — and why it falls short.', "Ce que les dirigeants utilisent aujourd'hui — et pourquoi cela ne suffit pas."],
+                ['4 structural advantages', '4 avantages structurels'],
+                ['that deepen with every use.', 'qui se renforcent à chaque usage.'],
+                ['How we scale distribution without scaling headcount.', 'Comment nous accélérons la distribution sans augmenter les effectifs.'],
+                ['A high-margin engine from day one.', 'Un moteur à forte marge dès le premier jour.'],
+                ['Become a Proxima OS deployer —', 'Devenez déployeur Proxima OS —'],
+                ['bring executive AI to your clients.', "apportez l'IA exécutive à vos clients."],
+                ['Join us to build Europe’s first sovereign executive AI platform.', 'Rejoignez-nous pour construire la première plateforme souveraine européenne d’IA exécutive.'],
+                ['What beta users get', 'Ce que les bêta-testeurs obtiennent'],
+                ['What we ask from you', 'Ce que nous attendons de vous'],
+                ['Target profile', 'Profil cible'],
+                ['Selection of 10 beta users', 'Sélection de 10 bêta-testeurs'],
+                ['Onboarding & launch', 'Onboarding et lancement'],
+                ['Beta debrief · subscription transition', 'Débrief bêta · transition abonnement'],
+                ['Full MVP access (Plexusia + CFO + CBO + CPO)', 'Accès complet au MVP (Plexusia + CFO + CBO + CPO)'],
+                ['free for 90 days', 'gratuit pendant 90 jours'],
+                ['Direct access to the roadmap — your feedback shapes the product', 'Accès direct à la feuille de route — vos retours orientent le produit'],
+                ['Founder rate for life', 'Tarif fondateur à vie'],
+                ['Optional mention & co-building visibility in Proxima Nexus materials', 'Mention optionnelle et visibilité co-construction dans les supports Proxima Nexus'],
+                ['One monthly 45-min debrief with the Proxima team', "Un débrief mensuel de 45 min avec l'équipe Proxima"],
+                ['Share 3 documented use cases by day 90', "Partager 3 cas d'usage documentés d'ici le jour 90"],
+                ['Provide a testimonial (text or video) if satisfied', 'Fournir un témoignage (texte ou vidéo) si satisfait'],
+                ['The solopreneur has no team.', "Le solopreneur n'a pas d'équipe."],
+                ["The CEO can't always trust the room.", "Le CEO ne peut pas toujours se confier à la salle."],
+                ['All three need the same thing:', 'Les trois ont besoin de la même chose :'],
+                ['a brilliant, discreet, always-available thinking partner', 'un partenaire de réflexion brillant, discret et toujours disponible'],
+                ['What it is', "Ce que c'est"],
+                ['What it replaces', 'Ce que cela remplace'],
+                ['Knows your business', 'Connaît votre activité'],
+                ['Fully confidential', 'Entièrement confidentiel'],
+                ['Always available', 'Toujours disponible'],
+                ['Gets smarter over time', "S'améliore avec le temps"],
+                ['Data sovereignty', 'Souveraineté des données'],
+                ['modular architecture', 'architecture modulaire'],
+                ['frugal compute', 'compute frugal'],
+                ['Integrators', 'Intégrateurs'],
+                ['Certified reseller', 'Revendeur certifié'],
+                ['Sovereign Partner', 'Partenaire souverain'],
+                ['Revenue model', 'Modèle de revenus'],
+                ['Monthly SaaS', 'SaaS mensuel'],
+                ['Onboarding fee', "Frais d'onboarding"],
+                ['Partner revenue share', 'Partage de revenus partenaires'],
+                ['Custom integrations via professional services', 'Intégrations sur mesure via services professionnels'],
+                ['private deployment', 'déploiement privé'],
+                ['Best for:', 'Idéal pour :'],
+                ['mid-market · enterprise', 'ETI · entreprise'],
+                ['The Solopreneur', 'Le solopreneur'],
+                ['The CEO / Founder', 'Le CEO / fondateur'],
+                ['The Head of Department', 'Le responsable de département'],
+                ['The MVP · Plexusia + CFO + CBO + CPO', 'Le MVP · Plexusia + CFO + CBO + CPO'],
+                ['The key insight', "L'idée clé"],
+                ['What a conversation with your digital twin looks like.', 'À quoi ressemble une conversation avec votre jumeau numérique.'],
+                ['What makes it different from ChatGPT', 'Ce qui la différencie de ChatGPT'],
+                ['The core unlock', 'Le déclic fondamental'],
+                ['What Plexusia v1 is NOT', "Ce que Plexusia v1 n'est PAS"],
+                ['The commercial entry point', "Le point d'entrée commercial"],
+                ['Phase 1 — Plexusia MVP', 'Phase 1 — MVP Plexusia'],
+                ['Phase 2 — Expanding the Team', "Phase 2 — Extension de l'équipe"],
+                ['Phase 3 — Full Executive Suite', 'Phase 3 — Suite exécutive complète'],
+                ['Phase 4 — European Platform', 'Phase 4 — Plateforme européenne'],
+                ['The Billion-Dollar Solopreneur', 'Le solopreneur à un milliard'],
+                ['What the leader needs', 'Ce dont le dirigeant a besoin'],
+                ['Affordable for a solopreneur', 'Abordable pour un solopreneur'],
+                ['The ability to think out loud without political cost is priceless to a leader.', "La capacité à réfléchir à voix haute sans coût politique est inestimable pour un dirigeant."],
+                ['No team member, no consultant, no board member offers this.', "Ni un membre d'équipe, ni un consultant, ni un administrateur n'offre cela."],
+                ["It's a unique selling proposition that creates deep emotional lock-in.", "C'est une proposition de valeur unique qui crée un fort attachement émotionnel."],
+                ['Each new agent added to Proxima OS draws from the shared memory Plexusia has already built.', "Chaque nouvel agent ajouté à Proxima OS s'appuie sur la mémoire partagée déjà construite par Plexusia."],
+                ['The entire team is pre-briefed on your business from day one.', "Toute l'équipe est déjà briefée sur votre activité dès le premier jour."],
+                ['No onboarding, no ramp-up, no context loss.', 'Pas de rebrief, pas de montée en charge, pas de perte de contexte.'],
+                ['Full institutional memory', 'Mémoire institutionnelle complète'],
+                ['Full Executive Suite', 'Suite exécutive complète'],
+                ['Beta Program · H2 2026', 'Programme bêta · S2 2026'],
+                ['What beta users get', 'Ce que les bêta-testeurs obtiennent'],
+                ['Target profile', 'Profil cible'],
+                ['What we ask from you', 'Ce que nous attendons de vous'],
+                ['One monthly 45-min debrief with the Proxima team', "Un débrief mensuel de 45 min avec l'équipe Proxima"],
+                ['Sovereign Partner', 'Partenaire souverain'],
+                ['What partners receive', 'Ce que reçoivent les partenaires'],
+                ['Partner network target', 'Objectif réseau partenaires'],
+                ['The Executive Team Everyone Deserves', "L'équipe exécutive que chacun mérite"],
+                ['for every solopreneur, CEO, and department head on the planet.', 'pour chaque solopreneur, CEO et responsable de département sur la planète.'],
+                ['Business Dev · Partnerships · Revenue · Growth', 'BizDev · Partenariats · Revenus · Croissance'],
+                ['Product strategy · Roadmap · Priorities · User value', 'Stratégie produit · Feuille de route · Priorités · Valeur utilisateur'],
+                ['Integrators', 'Intégrateurs'],
+                ['Revenue share', 'Partage de revenus'],
+                ['Join us to build Europe’s first sovereign executive AI platform.', "Rejoignez-nous pour bâtir la première plateforme souveraine européenne d'IA exécutive."],
+                ['The expensive consultant you call twice a year.', 'Le consultant coûteux que vous appelez deux fois par an.'],
+                ["The executive you can't fully trust with your doubts.", "Le dirigeant à qui vous ne pouvez pas confier pleinement vos doutes."],
+                ['The co-founder you never found.', "Le cofondateur que vous n'avez jamais trouvé."],
+                ["The senior team a solopreneur can't afford to hire.", "L'équipe senior qu'un solopreneur ne peut pas se permettre d'embaucher."],
+                ['An AI executive team that', "Une équipe exécutive IA qui"],
+                ['knows your business.', 'connaît votre activité.'],
+                ['Not a chatbot. Not a generic AI tool. A synthetic team of advisors with persistent memory of everything you’ve built.', "Pas un chatbot. Pas un outil d'IA générique. Une équipe synthétique de conseillers avec une mémoire persistante de tout ce que vous avez construit."],
+                ['Not a chatbot. Not a generic AI tool. A synthetic team of advisors with persistent memory of everything you\'ve built.', "Pas un chatbot. Pas un outil d'IA générique. Une équipe synthétique de conseillers avec une mémoire persistante de tout ce que vous avez construit."],
+                ["You can't think out loud", "Vous ne pouvez pas penser à voix haute"],
+                ['Every doubt shared with your team chips away at their confidence in you. So you keep the hard questions to yourself.', "Chaque doute partagé avec votre équipe érode leur confiance en vous. Alors vous gardez les questions difficiles pour vous."],
+                ['Strategic advice is expensive & slow', 'Le conseil stratégique est coûteux et lent'],
+                ["Consultants bill by the day, start from zero each time, and aren't available at 11 PM when the decision can't wait.", "Les consultants facturent à la journée, repartent de zéro à chaque fois et ne sont pas disponibles à 23 h quand la décision ne peut pas attendre."],
+                ['Execution stalls between decisions', "L'exécution cale entre deux décisions"],
+                ['No second brain to pressure-test the plan, run the analysis, draft the memo — while you stay focused on what only you can do.', "Pas de second cerveau pour challenger le plan, faire l'analyse, rédiger la note — pendant que vous restez concentré sur ce que vous seul pouvez faire."],
+                ['The head of department needs to move faster than the org allows.', "Le responsable de département doit aller plus vite que l'organisation ne le permet."],
+                ['All three need the same thing:', 'Les trois ont besoin de la même chose :'],
+                ['an executive team they can lean on, in full confidence, at any hour.', "une équipe exécutive sur laquelle s'appuyer, en totale confiance, à toute heure."],
+                ['Persistent memory, not a blank slate', "Mémoire persistante, pas une page blanche"],
+                ['Think out loud. No political cost.', "Pensez à voix haute. Aucun coût politique."],
+                ['24/7, no notice, no billing cycle', "24/7, sans préavis, sans cycle de facturation"],
+                ['Compounds from every interaction', "S'enrichit à chaque interaction"],
+                ["Runs a P&L, a team, a roadmap. Needs to move faster than the org can support. Can't wait 6 weeks for a consultant's report.", "Pilote un P&L, une équipe, une feuille de route. Doit aller plus vite que l'organisation ne le permet. Ne peut pas attendre 6 semaines le rapport d'un consultant."],
+                ['Plexusia — Digital twin, strategic dialogue, persistent business memory, co-founder thinking', 'Plexusia — Jumeau numérique, dialogue stratégique, mémoire métier persistante, réflexion de cofondateur'],
+                ['Digital twin core · Persistent business memory · Strategic dialogue interface · Sovereign deployment · First 10 beta users (solopreneurs & CEOs) · Product-market fit validation', 'Cœur jumeau numérique · Mémoire métier persistante · Interface de dialogue stratégique · Déploiement souverain · 10 premiers bêta-testeurs (solopreneurs et CEOs) · Validation du product-market fit'],
+                ['CMO + CLO agents expand the suite · Plexusia orchestration layer live · Proxima OS v1 licensable · Partner network beta (3–5 certified deployers) · First platform subscriptions', "Les agents CMO + CLO étendent la suite · Couche d'orchestration Plexusia en production · Proxima OS v1 licenciable · Réseau partenaires bêta (3 à 5 déployeurs certifiés) · Premiers abonnements plateforme"],
+                ['With the August 2026 deadline for high-risk AI systems, 40% of European companies are unaware of the regulation (PwC) and only 10% of SMEs feel prepared (EY). The governance module of Proxima OS directly addresses this.', "Avec l'échéance d'août 2026 pour les systèmes d'IA à haut risque, 40 % des entreprises européennes ignorent encore la réglementation (PwC) et seulement 10 % des PME se disent prêtes (EY). Le module de gouvernance de Proxima OS répond directement à cet enjeu."],
+                ['Solopreneur · startup/SME CEO · Head of Dept · decision-maker taking 5+ strategic decisions per week and aiming to move 2× faster without expanding the team.', "Solopreneur · CEO de startup/PME · responsable de département · décideur prenant plus de 5 décisions stratégiques par semaine et visant un rythme 2x plus rapide sans agrandir l'équipe."],
+                ['Full deployment kit · Proxima OS training & certification · Partner back-office access · Dedicated support · Co-marketing & listing on proxima-nexus.com', "Kit de déploiement complet · Formation et certification Proxima OS · Accès au back-office partenaires · Support dédié · Co-marketing et référencement sur proxima-nexus.com"],
+                ['Business Dev · Partnerships · Revenue · Growth', 'Développement commercial · Partenariats · Revenus · Croissance'],
+                ['Product strategy · Roadmap · Priorities · User value', 'Stratégie produit · Feuille de route · Priorités · Valeur utilisateur'],
+                ['Best for: solopreneur', 'Idéal pour : solopreneur'],
+                ['Best for: CEO · Head of Dept', 'Idéal pour : CEO · responsable de département'],
+                ['Integrators', 'Intégrateurs'],
+                ['What beta users get', 'Ce que les utilisateurs bêta obtiennent'],
+                ['What we ask from you', 'Ce que nous vous demandons'],
+                ['Timeline', 'Calendrier'],
+                ['Building a company alone. Wears every hat. Has no room for error and no one to sanity-check the plan at 2 AM.', "Construit son entreprise seul. Porte toutes les casquettes. N'a pas droit à l'erreur et n'a personne pour valider son plan à 2 h du matin."],
+                ["Has a team, but can't show every doubt to them. Needs a space to think strategically without the political weight of the room.", "A une équipe, mais ne peut pas lui montrer chacun de ses doutes. A besoin d'un espace pour réfléchir stratégiquement sans le poids politique de la salle."],
+                ["I need a co-founder who never needs equity.", "J'ai besoin d'un cofondateur qui ne demande jamais d'equity."],
+                ["I need a trusted advisor who only answers to me.", "J'ai besoin d'un conseiller de confiance qui ne répond qu'à moi."],
+                ["I need an expert team on demand, not on retainer.", "J'ai besoin d'une équipe d'experts à la demande, pas sous contrat de rétention."],
+                ['All three have the same core need:', 'Les trois partagent le même besoin fondamental :'],
+                ['who knows their business as well as they do — and can turn a conversation into execution.', "qui connaît leur activité aussi bien qu'eux — et peut transformer une conversation en exécution."],
+                ['Your Digital Twin.', 'Votre jumeau numérique.'],
+                ['Plexusia is the first module of Proxima OS. She is not a chatbot. She is a strategic AI persona — an alter ego who thinks like you, challenges you like a co-founder, and acts like the senior advisor you always wished you had on call.', "Plexusia est le premier module de Proxima OS. Ce n'est pas un chatbot. C'est une persona IA stratégique — un alter ego qui pense comme vous, vous challenge comme un cofondateur et agit comme le conseiller senior que vous avez toujours voulu avoir à portée de main."],
+                ['You can think out loud with Plexusia without any political cost. She never leaks. She never judges. She never needs to be managed. And she remembers everything about your business.', "Vous pouvez réfléchir à voix haute avec Plexusia sans coût politique. Elle ne divulgue rien. Elle ne juge pas. Elle n'a pas besoin d'être managée. Et elle se souvient de tout sur votre activité."],
+                ['🪞 She is your mirror', '🪞 Elle est votre miroir'],
+                ['She reflects your strategic thinking back to you with clarity — surfacing blind spots, stress-testing assumptions, sharpening your narrative.', 'Elle reflète votre réflexion stratégique avec clarté — met en lumière les angles morts, teste vos hypothèses et affine votre narration.'],
+                ['🧭 She is your co-founder', '🧭 Elle est votre cofondatrice'],
+                ['She holds the full picture of your vision, your clients, your priorities. Every conversation builds on the last — no re-briefing, no lost context.', "Elle détient la vision complète de votre ambition, de vos clients et de vos priorités. Chaque échange s'appuie sur le précédent — sans rebrief, sans perte de contexte."],
+                ['⚡ She is your accelerator', '⚡ Elle est votre accélérateur'],
+                ['She turns a 20-minute conversation into a structured decision, a memo, a brief — while you keep your authority intact in front of the team.', "Elle transforme 20 minutes de conversation en décision structurée, note et brief — pendant que vous gardez votre autorité intacte face à l'équipe."],
+                ['🔒 She is fully yours', '🔒 Elle est entièrement à vous'],
+                ['No data shared with competitors. No vendor reading your strategy. Sovereign by design — your intelligence assets stay under your control.', "Aucune donnée partagée avec des concurrents. Aucun fournisseur qui lit votre stratégie. Souverain par conception — vos actifs d'intelligence restent sous votre contrôle."],
+                ['Scenario 1 · Strategic Pressure-Test', 'Scénario 1 · Stress-test stratégique'],
+                ['"I\'m thinking of pivoting our positioning. Tell me what\'s wrong with this idea before I say it to the board."', "\"J'envisage de faire pivoter notre positionnement. Dis-moi ce qui ne va pas dans cette idée avant d'en parler au board.\""],
+                ['→ Plexusia stress-tests the thesis, surfaces 3 blind spots, and drafts the counter-argument — in minutes.', "→ Plexusia stress-teste la thèse, révèle 3 angles morts et rédige le contre-argument — en quelques minutes."],
+                ['Scenario 2 · Decision Support', 'Scénario 2 · Aide à la décision'],
+                ['"I have two options for this partnership. Help me think through the tradeoffs without anchoring me."', "\"J'ai deux options pour ce partenariat. Aide-moi à évaluer les compromis sans m'ancrer.\""],
+                ['→ Plexusia builds a structured option map with risk/reward, aligned to your known strategic priorities.', '→ Plexusia construit une carte d’options structurée risque/rendement, alignée sur vos priorités stratégiques.'],
+                ['Scenario 3 · Execution Acceleration', "Scénario 3 · Accélération d'exécution"],
+                ['"Here\'s a 15-min voice note from my meeting. Turn it into a project brief my team can execute."', "\"Voici une note vocale de 15 min issue de ma réunion. Transforme-la en brief projet exécutable par mon équipe.\""],
+                ['→ Plexusia extracts decisions, owners, deadlines and formats a brief — in your voice, ready to send.', "→ Plexusia extrait les décisions, responsables et échéances, puis formate un brief — dans votre voix, prêt à envoyer."],
+                ['She knows your business.', 'Elle connaît votre activité.'],
+                ['She remembers your clients, your previous decisions, your strategic priorities — across every conversation.', 'Elle se souvient de vos clients, de vos décisions passées et de vos priorités stratégiques — sur chaque conversation.'],
+                ['She has a personality.', 'Elle a une personnalité.'],
+                ['Defined character, consistent voice — not a blank assistant but a co-founder with opinions.', "Caractère défini, voix cohérente — pas un assistant vide, mais un cofondateur avec un point de vue."],
+                ['She pushes back.', 'Elle vous challenge.'],
+                ["She doesn't just say yes. She challenges your thinking — with your best interests, not her own agenda.", "Elle ne dit pas simplement oui. Elle challenge votre réflexion — dans votre intérêt, pas selon son agenda."],
+                ['She is calibrated to you.', 'Elle est calibrée sur vous.'],
+                ['She learns your decision style, your blind spots, your preferred output formats over time.', 'Elle apprend votre style de décision, vos angles morts et vos formats de sortie préférés au fil du temps.'],
+                ['You preserve full authority with your real team — because the messy thinking, the doubts, and the half-baked ideas all happen in a private space that only you and Plexusia share.', "Vous conservez toute votre autorité auprès de votre vraie équipe — car la réflexion brouillonne, les doutes et les idées incomplètes restent dans un espace privé partagé uniquement entre vous et Plexusia."],
+                ['Digital Twin · Strategy · Decisions · Your private co-founder', 'Jumeau numérique · Stratégie · Décisions · Votre cofondateur privé'],
+                ['Finance · Budget · Cash flow · P&L · Forecasting', 'Finance · Budget · Trésorerie · P&L · Prévisions'],
+                ['CMO · CLO · COO — modular, add what you need', 'CMO · CLO · COO — modulaire, ajoutez ce dont vous avez besoin'],
+                ['Each agent shares the same institutional memory of your business. Plexusia can delegate to any of them — and they all report back to you through a single, unified interface.', "Chaque agent partage la même mémoire institutionnelle de votre activité. Plexusia peut déléguer à chacun d'entre eux — et tous vous répondent via une interface unique et unifiée."],
+                ['Like a real executive team, but with no politics, no ego, and no sick days.', "Comme une véritable équipe exécutive, mais sans politique interne, sans ego et sans arrêts maladie."],
+                ['Budget, cash flow, P&L analysis, financial forecasting, fundraising prep', 'Budget, trésorerie, analyse P&L, prévisions financières, préparation levée de fonds'],
+                ['Business development, partnerships, deal qualification, revenue strategy', 'Développement commercial, partenariats, qualification des deals, stratégie de revenus'],
+                ['Product strategy, roadmap prioritisation, feature decisions, user value', 'Stratégie produit, priorisation de la feuille de route, décisions fonctionnalités, valeur utilisateur'],
+                ['All 4 agents share the same institutional memory — no re-briefing, ever', 'Les 4 agents partagent la même mémoire institutionnelle — aucun rebrief, jamais'],
+                ['Plexusia orchestrates the team — you talk to her, she routes to the right expert', "Plexusia orchestre l'équipe — vous lui parlez, elle oriente vers le bon expert"],
+                ['Live proof of concept', 'Preuve de concept en conditions réelles'],
+                ['Plexusia already exists as the co-founder intelligence of Proxima Nexus. Nathan Becheroy operates his entire consulting practice in dialogue with Plexusia — the company is its own first client.', "Plexusia existe déjà comme intelligence de cofondateur de Proxima Nexus. Nathan Becheroy pilote toute sa pratique de conseil en dialogue avec Plexusia — l'entreprise est son propre premier client."],
+                ['A generic AI assistant with no memory of who you are', "Un assistant IA générique sans mémoire de qui vous êtes"],
+                ['A task automation tool that executes workflows', "Un outil d'automatisation de tâches qui exécute des workflows"],
+                ['A content generator or writing assistant', "Un générateur de contenu ou assistant d'écriture"],
+                ['A replacement for your human team', "Un remplacement de votre équipe humaine"],
+                ['A consulting product that bills by the deliverable', "Un produit de conseil facturé au livrable"],
+                ['Plexusia v1 is the gateway to Proxima OS. Once a leader has a digital twin that knows their business, adding new agents (CMO, CLO, COO) becomes the natural next step — expanding the team without expanding headcount.', "Plexusia v1 est la porte d'entrée vers Proxima OS. Une fois qu'un dirigeant dispose d'un jumeau numérique qui connaît son activité, ajouter de nouveaux agents (CMO, CLO, COO) devient l'étape naturelle suivante — élargir l'équipe sans augmenter les effectifs."],
+                ['Autonomous enterprise TAM 2030', 'TAM entreprise autonome 2030'],
+                ['↑ from $55.85B in 2025 · CAGR 16.2%', '↑ depuis 55,85 Md$ en 2025 · CAGR 16,2 %'],
+                ['Enterprises stopped building AI internally', "Les entreprises ont cessé de construire l'IA en interne"],
+                ['Up from 24% in 2024 — demand for external AI is surging', "En hausse depuis 24 % en 2024 — la demande d'IA externe explose"],
+                ['Enterprise apps integrating AI agents by end 2026', "Applications d'entreprise intégrant des agents IA d'ici fin 2026"],
+                ['Gartner — up from less than 5% today', "Gartner — en hausse depuis moins de 5 % aujourd'hui"],
+                ['Sam Altman stated in May 2025 that the first $1B company run by a single person was imminent. A Fortune report in March 2026 documented a founder at $4.5M revenue as the sole employee. Proxima OS is the infrastructure that makes this possible.', "Sam Altman a déclaré en mai 2025 que la première entreprise à 1 Md$ dirigée par une seule personne était imminente. Un article Fortune de mars 2026 a documenté un fondateur à 4,5 M$ de revenus en tant qu'unique employé. Proxima OS est l'infrastructure qui rend cela possible."],
+                ['EU AI Act — a compliance trigger', "EU AI Act — un déclencheur de conformité"],
+                ['Generic AI', 'IA générique'],
+                ['Consulting', 'Conseil'],
+                ['Executive hire', 'Recrutement exécutif'],
+                ['Knows my specific business deeply', 'Connaît en profondeur mon activité spécifique'],
+                ['Available 24/7, no notice needed', 'Disponible 24/7, sans préavis'],
+                ['Fully confidential — no political risk', 'Entièrement confidentiel — sans risque politique'],
+                ['Memory that compounds over time', 'Mémoire qui se renforce avec le temps'],
+                ['Can cover multiple executive functions', 'Peut couvrir plusieurs fonctions exécutives'],
+                ['Sovereign — data stays with you', 'Souverain — les données restent chez vous'],
+                ['Full', 'Complet'],
+                ['Partial', 'Partiel'],
+                ['None', 'Aucun'],
+                ['Proxima OS is the only solution that combines deep business memory, full confidentiality, affordability, and persistent context — in a single product.', "Proxima OS est la seule solution qui combine mémoire métier profonde, confidentialité totale, accessibilité et contexte persistant — dans un seul produit."],
+                ['Compounding institutional memory', 'Mémoire institutionnelle cumulative'],
+                ['Every conversation makes Plexusia more useful. She builds a structured, cross-referenced knowledge base of your business — clients, decisions, priorities — that no generic AI can match from a cold start.', "Chaque conversation rend Plexusia plus utile. Elle construit une base de connaissances structurée et croisée de votre activité — clients, décisions, priorités — qu'aucune IA générique ne peut égaler à froid."],
+                ['Confidentiality as a product feature', 'La confidentialité comme fonctionnalité produit'],
+                ['Identity over interface', "L'identité avant l'interface"],
+                ['Plexusia is a person, not a prompt box. A defined personality, a consistent voice, a co-founder relationship. Users don\'t abandon a co-founder. This is the key to retention no generic tool can replicate.', "Plexusia agit comme une personne, pas une boîte à prompts. Une personnalité définie, une voix cohérente, une relation de cofondateur. On n'abandonne pas un cofondateur. C'est la clé de rétention qu'aucun outil générique ne peut reproduire."],
+                ['Plexusia acts like a person, not a prompt box. A defined personality, a consistent voice, a co-founder relationship. Users don\'t abandon a co-founder. This is the key to retention no generic tool can replicate.', "Plexusia agit comme une personne, pas une boîte à prompts. Une personnalité définie, une voix cohérente, une relation de cofondateur. On n'abandonne pas un cofondateur. C'est la clé de rétention qu'aucun outil générique ne peut reproduire."],
+                ['Expanding team = expanding value', 'Équipe élargie = valeur élargie'],
+                ['Subscription SaaS —', 'SaaS par abonnement —'],
+                ['modular, scalable, sovereign.', 'modulaire, scalable, souverain.'],
+                ['Starter', 'Starter'],
+                ['indicative · to confirm', 'indicatif · à confirmer'],
+                ['Plexusia (Digital Twin)', 'Plexusia (Jumeau numérique)'],
+                ['1 agent of your choice (CFO or CBO or CPO)', '1 agent au choix (CFO, CBO ou CPO)'],
+                ['Persistent memory', 'Mémoire persistante'],
+                ['Sovereign deployment', 'Déploiement souverain'],
+                ['RECOMMENDED', 'RECOMMANDÉ'],
+                ['Executive', 'Executive'],
+                ['Cross-agent orchestration', 'Orchestration inter-agents'],
+                ['Telegram / Slack / web access', 'Accès Telegram / Slack / web'],
+                ['Sovereign', 'Souverain'],
+                ['Custom', 'Sur mesure'],
+                ['Dedicated sovereign infrastructure', 'Infrastructure souveraine dédiée'],
+                ['Custom business-domain agents', 'Agents personnalisés par domaine métier'],
+                ['SLA + EU AI Act compliance', 'SLA + conformité EU AI Act'],
+                ['Personalized 2-hour onboarding with Nathan & Plexusia — full calibration to your business', "Onboarding personnalisé de 2 h avec Nathan et Plexusia — calibration complète à votre activité"],
+                ['Use Plexusia consistently — minimum 1 session/week, more if useful', "Utilisez Plexusia de manière régulière — minimum 1 session/semaine, davantage si utile"],
+                ['Share 3 documented use cases by day 90', "Partagez 3 cas d'usage documentés d'ici le jour 90"],
+                ['Provide a testimonial (text or video) if satisfied', "Fournissez un témoignage (texte ou vidéo) si satisfait"],
+                ['Become a Proxima OS deployer —', 'Devenez déployeur Proxima OS —'],
+                ['bring executive AI to your clients.', "apportez l'IA exécutive à vos clients."],
+                ['Consultants, advisory firms, digital agencies. You deploy Proxima OS for your clients under your own brand or in co-branding.', 'Consultants, cabinets de conseil, agences digitales. Vous déployez Proxima OS pour vos clients sous votre marque ou en co-branding.'],
+                ['IT services firms, software vendors, HR & training players. You embed Proxima OS into existing offers as an executive intelligence layer.', "ESN, éditeurs logiciels, acteurs RH et formation. Vous intégrez Proxima OS dans vos offres existantes comme couche d'intelligence exécutive."],
+                ['Hosting providers, datacenters, EU sovereign cloud players. You deploy Proxima OS infrastructure and guarantee European data residency.', "Hébergeurs, datacenters, acteurs cloud souverains européens. Vous déployez l'infrastructure Proxima OS et garantissez la résidence des données en Europe."],
+                ['Co-built model · open discussion H2 2026', 'Modèle co-construit · discussion ouverte S2 2026'],
+                ['3–5 pilot partners · H2 2026', '3 à 5 partenaires pilotes · S2 2026'],
+                ['10–20 certified partners · 2027', '10 à 20 partenaires certifiés · 2027'],
+                ['50+ EU partners (France, Belgium, Switzerland, Germany) · 2028–30', '50+ partenaires UE (France, Belgique, Suisse, Allemagne) · 2028–2030'],
+                ['Every great leader deserves', 'Chaque grand leader mérite'],
+                ['a great team.', 'une grande équipe.'],
+                ['Proxima OS makes that possible', 'Proxima OS le rend possible'],
+                ['Your digital twin · MVP H2 2026', 'Votre jumeau numérique · MVP S2 2026'],
+                ['EU-wide · 50+ partners · €50M+ 2030', 'À l’échelle UE · 50+ partenaires · 50 M€+ en 2030'],
+                // Robust fragment-level translations for mixed-tag blocks
+                ['Your Digital Twin', 'Votre jumeau numérique'],
+                ['She ', 'Elle '],
+                ['Proxima OS: a complete', 'Proxima OS : une'],
+                ['synthetic executive team.', 'équipe exécutive synthétique.'],
+                ['Product strategy · Priorities · User value', 'Stratégie produit · Priorités · Valeur utilisateur'],
+                ['Each agent ', 'Chaque agent '],
+                ['shares the same institutional memory', 'partage la même mémoire institutionnelle'],
+                [' of your business. Plexusia can delegate to any of them — and they all report back to you through a single, unified interface. ', " de votre activité. Plexusia peut déléguer à chacun d'eux — et tous vous répondent via une interface unique et unifiée. "],
+                ['COO + domain-specific agents complete the suite · Full Proxima OS marketplace · 10–20 certified partners EU-wide · Department-level rollouts in mid-market enterprises · ISO 42001 AI governance module', "Les agents COO et spécialisés complètent la suite · Marketplace Proxima OS complète · 10 à 20 partenaires certifiés à l'échelle UE · Déploiements départementaux dans les ETI · Module de gouvernance IA ISO 42001"],
+                ['COO + domain-specific agents complete the suite · Complet Proxima OS marketplace · 10–20 certified partners EU-wide · Department-level rollouts in mid-market enterprises · ISO 42001 AI governance module', "Les agents COO et spécialisés complètent la suite · Marketplace Proxima OS complète · 10 à 20 partenaires certifiés à l'échelle UE · Déploiements départementaux dans les ETI · Module de gouvernance IA ISO 42001"],
+                ['Sovereign EU-hosted compute infrastructure · 50+ partners across France, Belgium, Switzerland, Germany · Proxima OS as the standard AI operating layer for European SMEs and ETIs', "Infrastructure de calcul souveraine hébergée en UE · 50+ partenaires en France, Belgique, Suisse et Allemagne · Proxima OS comme couche opérationnelle IA standard pour les PME et ETI européennes"],
+                ['Sam Altman stated in May 2025 that ', 'Sam Altman a déclaré en mai 2025 que '],
+                ['the first $1B company run by a single person was imminent.', "la première entreprise à 1 Md$ dirigée par une seule personne était imminente."],
+                ['With the August 2026 deadline for high-risk AI systems, ', "Avec l'échéance d'août 2026 pour les systèmes d'IA à haut risque, "],
+                ['40% of European companies are unaware of the regulation (PwC)', '40 % des entreprises européennes ignorent encore la réglementation (PwC)'],
+                [' and only 10% of SMEs feel prepared (EY). The governance module of Proxima OS directly addresses this.', ' et seulement 10 % des PME se disent prêtes (EY). Le module de gouvernance de Proxima OS répond directement à cet enjeu.'],
+                ['Solopreneur · startup/SME CEO · Head of Dept · ', 'Solopreneur · CEO de startup/PME · responsable de département · '],
+                ['decision-maker taking 5+ strategic decisions per week', 'décideur prenant plus de 5 décisions stratégiques par semaine'],
+                [' and aiming to move 2× faster without expanding the team.', " et visant un rythme 2x plus rapide sans agrandir l'équipe."],
+                ['Co-built model', 'Modèle co-construit'],
+                ['open discussion H2 2026', 'discussion ouverte S2 2026'],
+                ['pilot partners · H2 2026', 'partenaires pilotes · S2 2026'],
+                ['certified partners · 2027', 'partenaires certifiés · 2027'],
+                ['EU partners (France, Belgium, Switzerland, Germany) · 2028–30', 'partenaires UE (France, Belgique, Suisse, Allemagne) · 2028–2030'],
+                ['A structured, AI-powered operating system that gives any leader access to a ', "Un système d’exploitation structuré, propulsé par l’IA, qui donne à tout dirigeant accès à une "],
+                ['team of specialized AI executives', "équipe d’exécutifs IA spécialisés"],
+                [' — each with a defined role, a deep memory of your context, and the ability to act, not just advise.', ' — chacun avec un rôle défini, une mémoire profonde de votre contexte, et la capacité d’agir, pas seulement de conseiller.'],
+                ['Plexusia is the first module of Proxima OS.', 'Plexusia est le premier module de Proxima OS.'],
+                ['She is not a chatbot.', "Ce n’est pas un chatbot."],
+                ['She is a ', 'C’est une '],
+                ['strategic AI persona', 'persona IA stratégique'],
+                ['an alter ego who thinks like you, challenges you like a co-founder, and acts like the senior advisor you always wished you had on call.', "un alter ego qui pense comme vous, vous challenge comme un cofondateur et agit comme le conseiller senior que vous avez toujours voulu avoir à portée de main."],
+                ['You can think out loud with Plexusia without any political cost.', 'Vous pouvez réfléchir à voix haute avec Plexusia sans coût politique.'],
+                ['She never leaks.', 'Elle ne divulgue rien.'],
+                ['She never judges.', 'Elle ne juge pas.'],
+                ['She never needs to be managed.', "Elle n’a pas besoin d’être managée."],
+                ['And she remembers ', 'Et elle se souvient de '],
+                ['everything', 'tout'],
+                ['about your business.', 'de votre activité.'],
+                ['She reflects your strategic thinking back to you with clarity — surfacing blind spots, stress-testing assumptions, sharpening your narrative.', 'Elle reflète votre réflexion stratégique avec clarté — met en lumière les angles morts, teste les hypothèses et affine votre narration.'],
+                ['She holds the full picture of your vision, your clients, your priorities.', 'Elle détient la vision complète de votre ambition, de vos clients et de vos priorités.'],
+                ['Every conversation builds on the last — no re-briefing, no lost context.', 'Chaque échange s’appuie sur le précédent — sans rebrief, sans perte de contexte.'],
+                ['She turns a 20-minute conversation into a structured decision, a memo, a brief — while you keep your authority intact in front of the team.', 'Elle transforme 20 minutes de conversation en décision structurée, note et brief — pendant que vous gardez votre autorité intacte face à l’équipe.'],
+                ['No data shared with competitors.', 'Aucune donnée partagée avec des concurrents.'],
+                ['No vendor reading your strategy.', 'Aucun fournisseur qui lit votre stratégie.'],
+                ['Sovereign by design — your intelligence assets stay under your control.', 'Souverain par conception — vos actifs d’intelligence restent sous votre contrôle.'],
+                ['I’m thinking of pivoting our positioning. Tell me what’s wrong with this idea before I say it to the board.', "J’envisage de faire pivoter notre positionnement. Dis-moi ce qui ne va pas dans cette idée avant d’en parler au board."],
+                ["I'm thinking of pivoting our positioning. Tell me what's wrong with this idea before I say it to the board.", "J’envisage de faire pivoter notre positionnement. Dis-moi ce qui ne va pas dans cette idée avant d’en parler au board."],
+                ['I have two options for this partnership. Help me think through the tradeoffs without anchoring me.', 'J’ai deux options pour ce partenariat. Aide-moi à évaluer les compromis sans m’ancrer.'],
+                ['Here’s a 15-min voice note from my meeting. Turn it into a project brief my team can execute.', "Voici une note vocale de 15 min issue de ma réunion. Transforme-la en brief projet exécutable par mon équipe."],
+                ["Here's a 15-min voice note from my meeting. Turn it into a project brief my team can execute.", "Voici une note vocale de 15 min issue de ma réunion. Transforme-la en brief projet exécutable par mon équipe."],
+                ['She remembers your clients, your previous decisions, your strategic priorities — across every conversation.', 'Elle se souvient de vos clients, de vos décisions passées et de vos priorités stratégiques — sur chaque conversation.'],
+                ['Defined character, consistent voice — not a blank assistant but a co-founder with opinions.', 'Caractère défini, voix cohérente — pas un assistant vide, mais un cofondateur avec un point de vue.'],
+                ["She doesn't just say yes.", 'Elle ne dit pas simplement oui.'],
+                ['She challenges your thinking — with your best interests, not her own agenda.', 'Elle challenge votre réflexion — dans votre intérêt, pas selon son agenda.'],
+                ['She learns your decision style, your blind spots, your preferred output formats over time.', 'Elle apprend votre style de décision, vos angles morts et vos formats de sortie préférés au fil du temps.'],
+                ['You preserve ', 'Vous conservez '],
+                ['full authority', 'toute votre autorité'],
+                ['with your real team — because the messy thinking, the doubts, and the half-baked ideas all happen in a private space that only you and Plexusia share.', 'auprès de votre vraie équipe — car la réflexion brouillonne, les doutes et les idées incomplètes restent dans un espace privé partagé uniquement entre vous et Plexusia.'],
+                ['First 10 beta users (solopreneurs & CEOs)', '10 premiers bêta-testeurs (solopreneurs et CEOs)'],
+                ['Product-market fit validation', 'Validation du product-market fit'],
+                ['Autonomous enterprise TAM 2030', 'TAM entreprise autonome 2030'],
+                ['Enterprises stopped building AI internally', 'Les entreprises ont cessé de construire l’IA en interne'],
+                ['Enterprise apps integrating AI agents by end 2026', 'Applications d’entreprise intégrant des agents IA d’ici fin 2026'],
+                ['The first $1B company run by a single person was imminent.', 'la première entreprise à 1 Md$ dirigée par une seule personne était imminente.'],
+                ['A Fortune report in March 2026 documented a founder at $4.5M revenue as the sole employee.', 'Un article Fortune de mars 2026 a documenté un fondateur à 4,5 M$ de revenus en tant qu’unique employé.'],
+                ['Proxima OS is the infrastructure that makes this possible.', 'Proxima OS est l’infrastructure qui rend cela possible.'],
+                ['Plexusia + CFO + CBO + CPO', 'Plexusia + CFO + CBO + CPO'],
+                ['Budget, cash flow, P&L analysis, financial forecasting, fundraising prep', 'Budget, trésorerie, analyse P&L, prévisions financières, préparation levée de fonds'],
+                ['Business development, partnerships, deal qualification, revenue strategy', 'Développement commercial, partenariats, qualification des deals, stratégie de revenus'],
+                ['Product strategy, roadmap prioritisation, feature decisions, user value', 'Stratégie produit, priorisation de la feuille de route, décisions fonctionnalités, valeur utilisateur'],
+                ['All 4 agents share the same institutional memory — no re-briefing, ever', 'Les 4 agents partagent la même mémoire institutionnelle — aucun rebrief, jamais'],
+                ['Plexusia orchestrates the team — you talk to her, she routes to the right expert', 'Plexusia orchestre l’équipe — vous lui parlez, elle oriente vers le bon expert'],
+                ['Plexusia already exists as the co-founder intelligence of Proxima Nexus.', 'Plexusia existe déjà comme intelligence de cofondateur de Proxima Nexus.'],
+                ['Nathan Becheroy operates his entire consulting practice in dialogue with Plexusia — ', 'Nathan Becheroy pilote toute sa pratique de conseil en dialogue avec Plexusia — '],
+                ['the company is its own first client.', 'l’entreprise est son propre premier client.'],
+                ['A generic AI assistant with no memory of who you are', 'Un assistant IA générique sans mémoire de qui vous êtes'],
+                ['A task automation tool that executes workflows', 'Un outil d’automatisation de tâches qui exécute des workflows'],
+                ['A content generator or writing assistant', 'Un générateur de contenu ou assistant d’écriture'],
+                ['A replacement for your human team', 'Un remplacement de votre équipe humaine'],
+                ['A consulting product that bills by the deliverable', 'Un produit de conseil facturé au livrable'],
+                ['Plexusia v1 is the gateway to Proxima OS.', 'Plexusia v1 est la porte d’entrée vers Proxima OS.'],
+                ['Once a leader has a digital twin that knows their business, adding new agents (CMO, CLO, COO) becomes the natural next step — expanding the team without expanding headcount.', 'Une fois qu’un dirigeant dispose d’un jumeau numérique qui connaît son activité, ajouter de nouveaux agents (CMO, CLO, COO) devient l’étape naturelle suivante — élargir l’équipe sans augmenter les effectifs.'],
+                ['What beta users get', 'Ce que les bêta-testeurs obtiennent'],
+                ['What we ask from you', 'Ce que nous attendons de vous'],
+                ['Use Plexusia consistently — minimum 1 session/week, more if useful', 'Utilisez Plexusia de manière régulière — minimum 1 session/semaine, davantage si utile'],
+                ['Use Plexusia consistently — ', 'Utilisez Plexusia de manière régulière — '],
+                ['minimum 1 session/week', 'minimum 1 session/semaine'],
+                [', more if useful', ', davantage si utile'],
+                ['One monthly 45-min debrief with the Proxima team', 'Un débrief mensuel de 45 min avec l’équipe Proxima'],
+                ['Share 3 documented use cases by day 90', 'Partagez 3 cas d’usage documentés d’ici le jour 90'],
+                ['Provide a testimonial (text or video) if satisfied', 'Fournissez un témoignage (texte ou vidéo) si satisfait'],
+                ['Consultants, advisory firms, digital agencies. You deploy Proxima OS for your clients under your own brand or in co-branding.', 'Consultants, cabinets de conseil, agences digitales. Vous déployez Proxima OS pour vos clients sous votre marque ou en co-branding.'],
+                ['IT services firms, software vendors, HR & training players. You embed Proxima OS into existing offers as an executive intelligence layer.', 'ESN, éditeurs logiciels, acteurs RH et formation. Vous intégrez Proxima OS dans vos offres existantes comme couche d’intelligence exécutive.'],
+                ['Hosting providers, datacenters, EU sovereign cloud players. You deploy Proxima OS infrastructure and guarantee European data residency.', 'Hébergeurs, datacenters, acteurs cloud souverains européens. Vous déployez l’infrastructure Proxima OS et garantissez la résidence des données en Europe.'],
+                ['What partners receive', 'Ce que reçoivent les partenaires'],
+                ['Full deployment kit · Proxima OS training & certification · Partner back-office access · Dedicated support · Co-marketing & listing on proxima-nexus.com', 'Kit de déploiement complet · Formation et certification Proxima OS · Accès au back-office partenaires · Support dédié · Co-marketing et référencement sur proxima-nexus.com'],
+                ['Partner network target', 'Objectif réseau partenaires'],
+                ['3–5 pilot partners · H2 2026', '3 à 5 partenaires pilotes · S2 2026'],
+                ['10–20 certified partners · 2027', '10 à 20 partenaires certifiés · 2027'],
+                ['50+ EU partners (France, Belgium, Switzerland, Germany) · 2028–30', '50+ partenaires UE (France, Belgique, Suisse, Allemagne) · 2028–2030'],
+            ];
+
+            const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+            const textNodes = [];
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                const parentTag = node.parentElement?.tagName;
+                if (parentTag && ['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(parentTag)) continue;
+                textNodes.push(node);
+            }
+
+            textNodes.forEach((node) => {
+                let value = node.nodeValue;
+                replacements.forEach(([enText, frText]) => {
+                    if (value.includes(enText)) value = value.replaceAll(enText, frText);
+                });
+                node.nodeValue = value;
+            });
+        }
+
+        document.documentElement.lang = lang;
+    }
+
+    applyDeckI18n(getDeckLanguage());
+
+    function goToSlide(n) {
+        const prev = document.querySelector('.slide.active');
+        const next = document.querySelector(`.slide[data-slide="${n}"]`);
+        if (prev) prev.classList.remove('active');
+        if (next) { next.classList.add('active'); animateSlide(next); }
+        current = n; updateNav();
+    }
+    function changeSlide(dir) { let n = current + dir; if (n < 1) n = total; if (n > total) n = 1; goToSlide(n); }
+    function updateNav() {
+        document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i + 1 === current));
+        counter.textContent = current + ' / ' + total;
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+    });
+    let tx = 0;
+    document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) changeSlide(d > 0 ? 1 : -1); });
+
+    function animateSlide(slide) {
+        slide.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transition = 'none';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(14px)';
+            el.offsetHeight;
+            const delay = i * 0.06;
+            el.style.transition = `opacity 0.42s ease ${delay}s, transform 0.42s ease ${delay}s`;
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        });
+        animateSlideEffects(slide);
+    }
+
+    function animateSlideEffects(slide) {
+        slide.querySelectorAll('[data-count]:not(.counted)').forEach(el => {
+            el.classList.add('counted');
+            const target = parseInt(el.dataset.count);
+            const suffix = el.dataset.suffix || '', prefix = el.dataset.prefix || '';
+            el.textContent = prefix + Math.round(target).toLocaleString() + suffix;
+        });
+        slide.querySelectorAll('.bar-fill:not(.fill-init)').forEach((bar) => {
+            bar.classList.add('fill-init');
+            bar.style.transition = 'none';
+            bar.style.width = bar.dataset.width + '%';
+        });
+    }
+
+    const spotlight = document.querySelector('.mouse-spotlight');
+    if (spotlight) spotlight.style.display = 'none';
+
+    document.querySelectorAll('.particle-canvas, .particle-canvas-ambient').forEach((c) => {
+        c.style.display = 'none';
+    });
+    try { animateSlide(document.querySelector('.slide.active')); } catch(e) {}
+</script>
+</body>
+</html>
