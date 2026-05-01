@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('proxima-theme');
+          var pref =
+            stored === 'dark' || stored === 'light' || stored === 'auto'
+              ? stored
+              : 'auto';
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var resolved =
+            pref === 'dark' ? 'dark' : pref === 'light' ? 'light' : prefersDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', resolved);
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Proxima Nexus — Sovereign AI Implementation</title>
+    <meta name="description" content="AI implementation consultancy: Proxima Scan, Pilot, Command, and ISO 42001 readiness. Sovereign enterprise AI without vendor lock-in." />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
