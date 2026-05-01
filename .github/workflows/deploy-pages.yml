@@ -1,0 +1,84 @@
+# Builds the Vite app and publishes dist/ to GitHub Pages.
+#
+# Supports either repo layout:
+#   - App in proxima-nexus-web/ (monorepo-style parent folder)
+#   - App at repository root (if you ran git init inside proxima-nexus-web)
+#
+# Pages: Settings → Pages → Source: GitHub Actions
+# User site repo (<user>.github.io): set VITE_BASE_URL to "/" only (edit env below).
+
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      dist_path: ${{ steps.resolve.outputs.dist_path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pages base path (repo subfolder vs user site)
+        id: pages_base
+        run: |
+          NAME="${{ github.event.repository.name }}"
+          if [[ "$NAME" == *.github.io ]]; then
+            echo "vite_base=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "vite_base=/$NAME/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve app directory
+        id: resolve
+        run: |
+          if [ -f proxima-nexus-web/package.json ]; then
+            echo "app_dir=proxima-nexus-web" >> "$GITHUB_OUTPUT"
+            echo "lock_path=proxima-nexus-web/package-lock.json" >> "$GITHUB_OUTPUT"
+            echo "dist_path=proxima-nexus-web/dist" >> "$GITHUB_OUTPUT"
+          elif [ -f package.json ]; then
+            echo "app_dir=." >> "$GITHUB_OUTPUT"
+            echo "lock_path=package-lock.json" >> "$GITHUB_OUTPUT"
+            echo "dist_path=dist" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::No package.json at repo root or proxima-nexus-web/"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ${{ steps.resolve.outputs.lock_path }}
+
+      - name: Install and build
+        working-directory: ${{ steps.resolve.outputs.app_dir }}
+        env:
+          VITE_BASE_URL: ${{ steps.pages_base.outputs.vite_base }}
+        run: npm ci && npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.resolve.outputs.dist_path }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
