@@ -2,7 +2,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '../components/Button';
-import proximaOsSlideDeckHtml from '../../../proxima-os_Slide_Deck.html?raw';
+import proximaOsSlideDeckHtml from '../assets/proxima-os_Slide_Deck.html?raw';
 
 const STACK_LAYERS = [
   {
